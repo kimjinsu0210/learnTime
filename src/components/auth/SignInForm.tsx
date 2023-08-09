@@ -11,14 +11,8 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
       email: loginEmail,
       password: loginPassword
     });
-
-    console.log("signInData", data);
-    console.log("signInError", error);
-    if (error) {
-      alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-    } else {
-      alert("로그인 완료");
-    }
+    
+    if (error) alert("아이디 또는 비밀번호가 일치하지 않습니다.");
   };
 
   return (
