@@ -1,6 +1,7 @@
 import React from "react";
 import { FaGithub, FaFigma } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
+import ScrollToTop from "../scrollToTop/ScrollToTop";
 
 const Footer: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const Footer: React.FC = () => {
           <SiNotion size="30" color="#000000" />
         </a>
       </div>
+      <ScrollToTop />
     </footer>
   );
 };
