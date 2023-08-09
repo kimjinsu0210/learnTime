@@ -1,7 +1,11 @@
+import CategoryDetail from "components/categoryDetail/CategoryDetail";
+
 const Category = () => {
   return (
-    <div>Category</div>
-  )
-}
+    <>
+      <CategoryDetail />
+    </>
+  );
+};
 
-export default Category
+export default Category;
