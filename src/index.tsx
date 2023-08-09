@@ -1,5 +1,4 @@
 import { OverlayProvider } from "components/overlay/Overlay.context";
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
@@ -7,11 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-  <React.StrictMode>
-    <OverlayProvider>
-      <App />
-    </OverlayProvider>
-  </React.StrictMode>
+  <OverlayProvider>
+    <App />
+  </OverlayProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
