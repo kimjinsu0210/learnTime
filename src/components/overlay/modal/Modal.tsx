@@ -27,7 +27,7 @@ const Modal = ({ children, name }: Props) => {
       className="bg-black bg-opacity-30 fixed left-0 top-0 flex justify-center items-center w-full h-full z-40"
       onClick={handleClose}
     >
-      <div className="bg-white w-48 p-5">{children}</div>
+      <div className="bg-white max-w-sm p-5">{children}</div>
     </div>,
     document.getElementById("modal") as HTMLElement
   );
