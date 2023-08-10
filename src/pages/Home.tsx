@@ -1,17 +1,10 @@
 import { supabase } from "api/supabaseClient";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-type Category = {
-  id: number;
-  categoryName: string;
-  linkTitle: string;
-  link: string;
-  order: number;
-};
+import { Tables } from "types/supabase";
 
 const Home = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Tables<"category">[]>([]);
   useEffect(() => {
     loadCategory();
   }, []);
@@ -28,7 +21,7 @@ const Home = () => {
       {categories.map(item => (
         <div className="container py-4 flex justify-center">
           <div className="p-6 max-w-sm mx-auto bg-gray-200 text-black font-medium px-10 py-2 rounded-3xl shadow-md items-center  hover:bg-primary hover:text-white inline-block">
-            <Link to={`/${item.categoryName}`}>{item.categoryName}</Link>
+            <Link to={`/${item.name}`}>{item.name}</Link>
           </div>
         </div>
       ))}
