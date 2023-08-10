@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { FaSpinner } from "react-icons/fa";
 import { Link } from "react-router-dom";
+
 const Header: React.FC = () => {
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
