@@ -22,15 +22,15 @@ export default function CategoryDetail() {
   if (error) return <div>error</div>;
 
   return (
-    <div className="bg-gray-200 max-w-3xl mx-auto rounded-lg p-6">
+    <div className="max-w-3xl p-6 mx-auto bg-gray-200 rounded-lg">
       {categoryData?.map(data => (
         <div key={data.uid}>
-          <h2 className="text-2xl mb-4">{data.name}</h2>
+          <h2 className="mb-4 text-2xl">{data.name}</h2>
           <a href={`${data.link}`} target="_blank">
-            <div className="h-36 flex bg-white rounded">
+            <div className="flex bg-white rounded h-36">
               <div className="flex-auto px-4 py-5">
-                <h3 className="font-bold text-lg mb-2">{data.ogTitle}</h3>
-                <p className="text-ellipsis overflow-hidden text-sm text-gray-500">
+                <h3 className="mb-2 text-lg font-bold">{data.ogTitle}</h3>
+                <p className="overflow-hidden text-sm text-gray-500 line-clamp-3">
                   {data.ogDescription}
                 </p>
               </div>

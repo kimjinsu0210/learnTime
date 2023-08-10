@@ -16,7 +16,7 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
     if (!email) return Alert("이메일을 입력하세요!");
     if (!password) return Alert("비밀번호를 입력하세요!");
     if (!nickname) return Alert("닉네임을 입력하세요!");
-
+   
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -39,24 +39,26 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
     const selectedFile = event.target.files && event.target.files[0];
     if (selectedFile) {
       setProfileFile(selectedFile);
-      // const fileData = new FormData();
-      // console.log("fileData", fileData);
-      // fileData.append("file", selectedFile);
       const { data, error } = await supabase.storage
-        .from("profileImgs")
-        .upload(`profile_Images/${selectedFile.name}`, selectedFile, {
-          cacheControl: "3600",
-          upsert: false
-        });
-      console.log("data", data);
+      .from("profileImgs")
+      .upload(`profile_Images/${email}/${selectedFile.name}`, selectedFile, {
+        cacheControl: "3600",
+        upsert: false
+      });
+
       if (error) {
         console.error("File upload error:", error);
       } else {
         console.log("File uploaded successfully:", data);
       }
     }
+    const { data, error } = await supabase.storage
+      .from("profileImgs")
+      .download("profile_Images/kimjinsu0210@naver.com/earth_icon.png");
+    console.log("downData", data);
+    console.log("downError", error);
   };
-
+console.log("profileFile",profileFile)
   return (
     <form onSubmit={signUpHandler} className="p-[20px]">
       <div className="flex justify-end">
