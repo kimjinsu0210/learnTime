@@ -1,8 +1,8 @@
 import { useState } from "react";
 import defaultImg from "assets/defaultImg.png";
-import { AiFillCloseCircle } from "react-icons/ai";
 import { supabase } from "api/supabaseClient";
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
+import Button from "components/button/Button";
 
 const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
   const [email, setEmail] = useState<string>("");
@@ -58,18 +58,14 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
   };
 
   return (
-    <form onSubmit={signUpHandler} className="p-[20px]">
-      <div className="flex justify-end">
-        <AiFillCloseCircle
-          className="text-3xl text-red-500 cursor-pointer"
-          onClick={() => unmount("signUp")}
-        />
-      </div>
-      <div className="flex flex-col gap-4">
-        <label>이메일</label>
+    <form onSubmit={signUpHandler} className="p-[5px]">
+      <div className="mb-5 flex justify-center">회원가입</div>
+
+      <div className="flex flex-col m-2 gap-2">
+        {/* <label>이메일</label> */}
         <input
           className="auth-input"
-          placeholder="예)learntime@learntime.com"
+          placeholder=" email"
           type="text"
           value={email}
           onChange={e => {
@@ -77,18 +73,20 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
           }}
           autoFocus
         />
-        <label>비밀번호</label>
+        {/* <label>비밀번호</label> */}
         <input
           className="auth-input"
+          placeholder=" password"
           type="password"
           value={password}
           onChange={e => {
             setPassword(e.target.value);
           }}
         />
-        <label>닉네임</label>
+        {/* <label>닉네임</label> */}
         <input
           className="auth-input"
+          placeholder=" nickname"
           type="text"
           value={nickname}
           onChange={e => {
@@ -103,8 +101,9 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
           </div>
         )}
       </div>
-      <div className="flex justify-end">
-        <button className="p-2 mt-8 text-white bg-red-500 rounded-lg">가입하기</button>
+      <div className="flex justify-center">
+        <Button onClick={() => unmount("signUp")}>취소</Button>
+        <Button>가입하기</Button>
       </div>
     </form>
   );

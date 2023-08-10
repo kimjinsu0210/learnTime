@@ -1,6 +1,7 @@
 import { supabase } from "api/supabaseClient";
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { useModal } from "components/overlay/modal/Modal.hooks";
+import Button from "components/button/Button";
 import useInput from "hooks/useInput";
 
 const PostForm = () => {
@@ -15,45 +16,47 @@ const PostForm = () => {
   };
 
   const handlePost = async () => {
-    await supabase.from("POSTS").insert({ title, link, contents });
+    await supabase.from("posts").insert({ title, link, contents });
     await Alert("작성완료");
     unmount("post");
   };
 
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="grid grid-cols-[auto_1fr] gap-4">
-        <label htmlFor="title">제목:</label>
+    <div className="px-4 py-1 flex flex-col items-center gap-5">
+      <div className="flex justify-center">
+        <label>강의 노트</label>
+      </div>
+      <div className="flex flex-col gap-4">
+        {/* <label htmlFor="title">제목:</label> */}
         <input
           value={title}
+          placeholder=" 제목"
           onChange={handleChangeTitle}
-          className="border-solid border-2 border-black"
+          className="text-black w-96"
           id="title"
         />
 
-        <label htmlFor="link">링크:</label>
+        {/* <label htmlFor="link">링크:</label> */}
         <input
           value={link}
+          placeholder=" 링크"
           onChange={handleChangeLink}
-          className="border-solid border-2 border-black"
+          className="text-black w-96"
           id="link"
         />
 
-        <label htmlFor="contents">내용:</label>
+        {/* <label htmlFor="contents">내용:</label> */}
         <textarea
           value={contents}
+          placeholder=" 내용"
           onChange={handleChangeContents}
-          className="border-solid border-2 border-black"
+          className="text-black w-96 h-24"
           id="contents"
         />
       </div>
-      <div className="w-full flex justify-evenly">
-        <button onClick={handleCancel} className="p-2 text-white bg-red-500 rounded-lg">
-          CANCEL
-        </button>
-        <button onClick={handlePost} className="p-2 text-white bg-red-500 rounded-lg">
-          POST
-        </button>
+      <div>
+        <Button onClick={handleCancel}>취소</Button>
+        <Button onClick={handlePost}>저장</Button>
       </div>
     </div>
   );
