@@ -1,18 +1,20 @@
 import { supabase } from "api/supabaseClient";
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
+
 const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
   const [loginEmail, setLoginEmail] = useState<string>("");
   const [loginPassword, setLoginPassword] = useState<string>("");
-
+  const { Alert } = useDialog();
   const signInHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword({
       email: loginEmail,
       password: loginPassword
     });
-    
-    if (error) alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+    if (error) Alert("아이디 또는 비밀번호가 일치하지 않습니다.")
+    else unmount("signIn");
   };
 
   return (
@@ -26,7 +28,7 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
       <div className="flex flex-col gap-4">
         <label>이메일</label>
         <input
-          className="border-b border-gray-400 border-solid w-[300px] h-[35px]"
+          className="auth-input"
           type="text"
           value={loginEmail}
           onChange={e => {
@@ -36,7 +38,7 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
         />
         <label>비밀번호</label>
         <input
-          className="border-b border-gray-400 border-solid w-[300px] h-[35px]"
+          className="auth-input"
           type="password"
           value={loginPassword}
           onChange={e => {

@@ -7,8 +7,8 @@ export const SignUp = () => {
     mount("signUp", <SignUpForm unmount={unmount} />);
   };
   return (
-    <h1 className="text-xl font-bold cursor-pointer" onClick={signUpModalHandler}>
+    <p className="text-xl font-bold cursor-pointer" onClick={signUpModalHandler}>
       회원가입
-    </h1>
+    </p>
   );
 };
