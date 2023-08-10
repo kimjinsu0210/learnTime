@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "table";
+import { Database } from "table";
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || "";
