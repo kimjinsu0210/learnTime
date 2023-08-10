@@ -2,6 +2,7 @@ import { supabase } from "api/supabaseClient";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Tables } from "types/supabase";
+import Button from "../components/button/Button";
 
 const Home = () => {
   const [categories, setCategories] = useState<Tables<"category">[]>([]);
@@ -25,6 +26,7 @@ const Home = () => {
           </div>
         </div>
       ))}
+      <Button>버튼 컴포넌트 예시</Button>
     </div>
   );
 };

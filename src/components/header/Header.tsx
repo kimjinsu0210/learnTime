@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { supabase } from "api/supabaseClient";
 import { SignIn, SignOut, SignUp } from "components/auth/index";
 import useSessionStore from "components/zustand/store";
-
 import { BiMessageSquareError } from "react-icons/bi";
 import { FaSpinner } from "react-icons/fa";
 import logo from "assets/learntime_logo.gif";
