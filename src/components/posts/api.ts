@@ -4,3 +4,8 @@ export const fetchData = async () => {
   const { data } = await supabase.from("posts").select();
   return data;
 };
+
+export const getCategoryId = async (params: string | undefined) => {
+  const { data } = await supabase.from("category").select("uid").eq("name", params).single();
+  return data;
+};
