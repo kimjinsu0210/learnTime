@@ -14,12 +14,30 @@
   font-family: "intelone-mono-font-family-regular";
 }
 
+/* 전체 background-color 추가 */
+body {
+  padding-top: 68px;
+  background-color: #1c1c1c;
+}
+
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 100%;
+  background-color: black;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background-color: rgb(77, 77, 77);
+}
+
 .auth-input {
   border-bottom: 1px solid #a0aec0;
   width: 400px;
   height: 35px;
+  color: black;
 }
 
-.animate-spin {
-  animation: spin 3s linear infinite;
+.min-height-calc {
+  min-height: calc(100vh - 68px - 110px);
 }

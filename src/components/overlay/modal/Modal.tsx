@@ -27,7 +27,7 @@ const Modal = ({ children, name }: Props) => {
       className="fixed top-0 left-0 z-40 flex items-center justify-center w-full h-full bg-black bg-opacity-30"
       onClick={handleClose}
     >
-      <div className="max-w-lg p-5 bg-white rounded-lg">{children}</div>
+      <div className="max-w-lg p-5 bg-mainDark1 text-white rounded-lg">{children}</div>
     </div>,
     document.getElementById("modal") as HTMLElement
   );

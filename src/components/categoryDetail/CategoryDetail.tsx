@@ -3,24 +3,13 @@ import { supabase } from "api/supabaseClient";
 import { useQuery } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getCategoryDetail } from "api/supabaseDatabaseFn";
+import { Tables } from "types/supabase";
 
-export default function CategoryDetail() {
-  const param = useParams();
-  const paramCategoryName = param.category;
+interface Props {
+  categoryData: Tables<"category">[] | undefined;
+}
 
-  const useFetchCategory = () => {
-    return useQuery({
-      queryKey: "category",
-      queryFn: () => getCategoryDetail(paramCategoryName),
-      refetchOnWindowFocus: false
-    });
-  };
-
-  const { data: categoryData, error, isLoading } = useFetchCategory();
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>error</div>;
-
+export default function CategoryDetail({ categoryData }: Props) {
   return (
     <div className="bg-gray-200 max-w-3xl mx-auto rounded-lg p-6">
       {categoryData?.map(data => (
@@ -29,8 +18,10 @@ export default function CategoryDetail() {
           <a href={`${data.link}`} target="_blank">
             <div className="h-36 flex bg-white rounded">
               <div className="flex-auto px-4 py-5">
-                <h3 className="font-bold text-lg mb-2">{data.ogTitle}</h3>
-                <p className="text-ellipsis overflow-hidden text-sm text-gray-500">
+                <h3 className="font-bold text-lg text-ellipsis line-clamp-1 mb-2">
+                  {data.ogTitle}
+                </h3>
+                <p className="text-ellipsis line-clamp-3 whitespace-normal text-sm text-gray-500">
                   {data.ogDescription}
                 </p>
               </div>

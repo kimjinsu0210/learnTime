@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { supabase } from "api/supabaseClient";
 import { SignIn, SignOut, SignUp } from "components/auth/index";
 import useSessionStore from "components/zustand/store";
-import { BiMessageSquareError } from "react-icons/bi";
-import { FaSpinner } from "react-icons/fa";
-import logo from "assets/learntime_logo.gif";
-import logo2 from "assets/learntime_logo2.gif";
+import { BiSolidErrorCircle } from "react-icons/bi";
+// import { FaSpinner } from "react-icons/fa";
+// import logo from "assets/learntime_logo.gif";
+// import logo2 from "assets/learntime_logo2.gif";
 
 const Header: React.FC = () => {
   const session = useSessionStore(state => state.session);
@@ -25,16 +25,16 @@ const Header: React.FC = () => {
   }, [setSession]);
 
   return (
-    <header className="flex items-center justify-between px-4 py-2 text-gray-700 bg-gray-200">
+    <header className="z-30 fixed top-0 w-full flex items-center justify-between px-4 py-5 text-white bg-mainDark1">
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
-          <BiMessageSquareError size="24" color="red" />
-          <div className="flex items-center justify-center animate-spin">
+          <BiSolidErrorCircle size="25" color="white" />
+          {/* <div className="flex items-center justify-center animate-spin">
             <FaSpinner className="text-4xl text-red-500" />
-          </div>
-          <img src={logo} alt="" className="w-[40px]" />
-          <img src={logo2} alt="" className="w-[40px]" />
-          <h1 className="ml-2 text-xl font-bold">런타임</h1>
+          </div> */}
+          {/* <img src={logo} alt="" className="w-[40px]" />
+          <img src={logo2} alt="" className="w-[40px]" /> */}
+          <h1 className="ml-2 text-xl font-bold">LearnTime</h1>
         </Link>
       </div>
       <div className="flex items-center">

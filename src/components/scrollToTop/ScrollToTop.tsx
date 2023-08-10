@@ -25,7 +25,7 @@ export default function ScrollToTop() {
     <>
       {showButton && (
         <div
-          className="fixed right-5 bottom-5 flex justify-center items-center w-8 h-8 rounded-full bg-red-500 shadow-md cursor-pointer"
+          className="fixed right-5 bottom-5 flex justify-center items-center w-8 h-8 rounded-full bg-primary shadow-md cursor-pointer"
           onClick={scrollToTop}
         >
           <BiUpArrowAlt className="text-white text-lg" />
