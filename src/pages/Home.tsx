@@ -1,18 +1,11 @@
 import { supabase } from "api/supabaseClient";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Tables } from "types/supabase";
 import Button from "../components/button/Button";
 
-type Category = {
-  id: number;
-  name: string;
-  linkTitle: string;
-  link: string;
-  order: number;
-};
-
 const Home = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Tables<"category">[]>([]);
   useEffect(() => {
     loadCategory();
   }, []);

@@ -1,12 +1,12 @@
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "api/supabaseClient";
-import logo from "assets/learntime_logo.gif";
-import logo2 from "assets/learntime_logo2.gif";
 import { SignIn, SignOut, SignUp } from "components/auth/index";
 import useSessionStore from "components/zustand/store";
-import React, { useEffect } from "react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { FaSpinner } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import logo from "assets/learntime_logo.gif";
+import logo2 from "assets/learntime_logo2.gif";
 
 const Header: React.FC = () => {
   const session = useSessionStore(state => state.session);
