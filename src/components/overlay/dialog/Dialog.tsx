@@ -1,5 +1,6 @@
 import { useLockBodyScroll } from "hooks/useLockBodyScroll";
 import { MouseEvent, ReactNode } from "react";
+import { AiFillWarning } from "react-icons/ai";
 
 interface Props {
   onClose: any;
@@ -20,11 +21,14 @@ export const Dialog = ({ onClose, onSucess, type, children }: Props) => {
 
   return (
     <div
-      className="bg-black bg-opacity-30 fixed top-0 left-0 flex justify-center items-center w-full h-full z-50 "
+      className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-30 "
       onClick={close}
     >
-      <div className="bg-white w-48 p-5 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <img alt="체크아이콘" />
+      <div className="absolute max-w-[500px] p-8 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg left-1/2 top-1/2">
+        <div className="flex">
+        <AiFillWarning className="text-yellow-400 text-[30px] mb-5" />
+        <p className="m-1">경고!</p>
+        </div>
         <p>{children}</p>
         {type === "Confirm" ? (
           <div className="flex gap-4">
@@ -32,8 +36,13 @@ export const Dialog = ({ onClose, onSucess, type, children }: Props) => {
             <button onClick={onSucess}>확인</button>
           </div>
         ) : (
-          <div className="flex gap-5">
-            <button onClick={close}>확인</button>
+          <div className="flex justify-end gap-5">
+            <button
+              onClick={close}
+              className="mt-4 p-[7px] text-white bg-red-500 rounded-lg text-[13px]"
+            >
+              확인
+            </button>
           </div>
         )}
       </div>

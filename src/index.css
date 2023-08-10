@@ -4,11 +4,22 @@
 
 /* global style */
 @font-face {
-    font-family: 'intelone-mono-font-family-regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
+  font-family: "intelone-mono-font-family-regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
 }
 * {
-    font-family: 'intelone-mono-font-family-regular';
+  font-family: "intelone-mono-font-family-regular";
+}
+
+.auth-input {
+  border-bottom: 1px solid #a0aec0;
+  width: 400px;
+  height: 35px;
+}
+
+.animate-spin {
+  animation: spin 3s linear infinite;
 }
