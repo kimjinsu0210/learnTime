@@ -34,9 +34,6 @@ const Home = () => {
         </div>
       ))}
       <Button>버튼 컴포넌트 예시</Button>
-      <Button className="px-2 py-1 mx-2 my-2 bg-black text-yellow-400 text-xs">
-        커스텀 버튼 예시
-      </Button>
     </div>
   );
 };
