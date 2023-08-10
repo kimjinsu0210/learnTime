@@ -4,8 +4,6 @@ import { useQuery } from "react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getCategoryDetail } from "api/supabaseDatabaseFn";
 
-// import type { CategoryType } from "type/category";
-
 export default function CategoryDetail() {
   const param = useParams();
   const paramCategoryName = param.category;
