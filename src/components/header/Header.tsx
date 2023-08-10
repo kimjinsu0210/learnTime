@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { Session } from "@supabase/supabase-js";
-import { supabase } from "supabaseClient";
+import { supabase } from "../../api/supabaseClient";
 import { SignIn, SignOut, SignUp } from "components/auth/index";
 
 const Header: React.FC = () => {
