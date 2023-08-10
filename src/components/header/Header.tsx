@@ -1,13 +1,12 @@
-import React from "react";
-import { useEffect } from "react";
+import { supabase } from "api/supabaseClient";
+import logo from "assets/learntime_logo.gif";
+import logo2 from "assets/learntime_logo2.gif";
+import { SignIn, SignOut, SignUp } from "components/auth/index";
+import useSessionStore from "components/zustand/store";
+import React, { useEffect } from "react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { FaSpinner } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { supabase } from "api/supabaseClient";
-import { SignIn, SignOut, SignUp } from "components/auth/index";
-import useSessionStore from "components/zustand/store";
-import logo from "assets/learntime_logo.gif";
-import logo2 from "assets/learntime_logo2.gif";
 const Header: React.FC = () => {
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
@@ -32,14 +31,13 @@ const Header: React.FC = () => {
           <div className="flex items-center justify-center animate-spin">
             <FaSpinner className="text-4xl text-red-500" />
           </div>
-          <img src={logo} alt="" className="w-[40px]"/>
-          <img src={logo2} alt="" className="w-[40px]"/>
+          <img src={logo} alt="" className="w-[40px]" />
+          <img src={logo2} alt="" className="w-[40px]" />
           <h1 className="ml-2 text-xl font-bold">런타임</h1>
         </Link>
       </div>
       <div className="flex items-center">
-        {session ? 
-        (
+        {session ? (
           <>
             <Link to="/mypage">
               <img
@@ -53,8 +51,8 @@ const Header: React.FC = () => {
           </>
         ) : (
           <>
-          <SignIn />
-          <SignUp />
+            <SignIn />
+            <SignUp />
           </>
         )}
       </div>
