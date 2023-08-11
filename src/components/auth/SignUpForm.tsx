@@ -1,5 +1,6 @@
 import { supabase } from "api/supabaseClient";
 import Button from "components/button/Button";
+import { uuid } from "@supabase/gotrue-js/dist/module/lib/helpers";
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { useState } from "react";
 
@@ -26,18 +27,17 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
     let profileUrl = null;
     if (profileFile) {
       //이미지 storage 저장 로직
-      const { data, error } = await supabase.storage
+      const { error: storageError, data: storageData } = await supabase.storage
         .from("profileImgs")
-        .upload(`profile_Images/${email}/${profileFile.name}`, profileFile, {
+        .upload(`profile_Images/${email}/${uuid()}`, profileFile, {
           cacheControl: "3600",
           upsert: false
         });
-      profileUrl = data?.path;
-      console.log(error);
+      profileUrl = storageData?.path;
+      if (storageError) return Alert("storage에러발생");
     }
-
     //auth 생성
-    const { error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -47,7 +47,13 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
         }
       }
     });
-    console.log("authError", authError);
+    let uid = authData.user?.id;
+
+    //database 생성
+    const { error: dbError } = await supabase
+      .from("users")
+      .insert({ id: uid, email, nickname, profileImgUrl: profileUrl });
+
     if (authError) {
       if (authError?.message === "Unable to validate email address: invalid format")
         return Alert("이메일 형태가 올바르지 않습니다.");
@@ -55,17 +61,11 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
         return Alert("이미 일치하는 회원이 존재합니다.");
     }
 
-    //database 생성
-    const { error: dbError } = await supabase
-      .from("users")
-      .insert({ email, nickname, profileImgUrl: profileUrl });
-    console.log("dbError", dbError);
-    if (dbError) return Alert("에러발생");
+    if (dbError) return Alert("db에러발생");
 
     unmount("signUp");
     return alert("회원가입이 정상적으로 처리 되었습니다!");
   };
-
   return (
     <form onSubmit={signUpHandler} className="p-[5px]">
       <div className="flex justify-center mb-5">회원가입</div>
@@ -103,7 +103,7 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
           }}
         />
         <label>프로필 이미지</label>
-        <input className="auth-input" type="file" onChange={handleFileChange} />
+        <input type="file" onChange={handleFileChange} />
         {profileFile && (
           <div className="flex justify-center">
             <div>
