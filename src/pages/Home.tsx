@@ -13,14 +13,11 @@ const Home = () => {
     let { data } = await supabase.from("category").select("*").order("order", { ascending: true });
     setCategories(data || []);
   };
-
-  console.log("loadData->", categories);
-
   return (
     <div>
       {categories.map(item => (
-        <div key={item.uid} className="container py-4 flex justify-center">
-          <div className="text-3xl p-6 max-w-sm mx-auto text-white font-semibold px-10 items-center hover:text-primary hover:font-extrabold transition-transform duration-300 transform hover:scale-110">
+        <div key={item.uid} className="container flex justify-center py-4">
+          <div className="items-center max-w-sm p-6 px-10 mx-auto text-3xl font-semibold text-white transition-transform duration-300 transform hover:text-primary hover:font-extrabold hover:scale-110">
             <Link to={`/${item.name}`}>{item.name}</Link>
           </div>
         </div>
