@@ -1,8 +1,3 @@
-import React from "react";
-import { supabase } from "api/supabaseClient";
-import { useQuery } from "react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { getCategoryDetail } from "api/supabaseDatabaseFn";
 import { Tables } from "types/supabase";
 
 interface Props {
@@ -15,7 +10,7 @@ export default function CategoryDetail({ categoryData }: Props) {
       {categoryData?.map(data => (
         <div key={data.uid}>
           <h2 className="mb-4 text-2xl">{data.name}</h2>
-          <a href={`${data.link}`} target="_blank">
+          <a href={`${data.link}`} target="_blank" rel="noreferrer">
             <div className="flex bg-white rounded h-36">
               <div className="flex-auto px-4 py-5">
                 <h3 className="mb-2 text-lg font-bold text-ellipsis line-clamp-1">
@@ -25,7 +20,9 @@ export default function CategoryDetail({ categoryData }: Props) {
                   {data.ogDescription}
                 </p>
               </div>
-              {data.ogImgUrl && <img className="flex-initial w-64" src={data.ogImgUrl} />}
+              {data.ogImgUrl && (
+                <img className="flex-initial w-64" src={data.ogImgUrl} alt={data.name} />
+              )}
             </div>
           </a>
         </div>
