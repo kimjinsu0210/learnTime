@@ -28,24 +28,25 @@ const Details = () => {
     setComment("");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || !data) return <div>Loading...</div>;
+
   return (
     <div>
       <div className="bg-gray-200 max-w-3xl mx-auto my-10 rounded-lg p-6 flex flex-col gap-5">
         <div className="flex items-center gap-5">
           <div className="flex justify-center items-center  w-16 h-16 rounded-full">
             <img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data?.users?.profileImgUrl}`}
-              alt={`${data?.users?.profileImgUrl}`}
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data.users?.profileImgUrl}`}
+              alt={`${data.users?.profileImgUrl}`}
             />
           </div>
-          <div>{data?.users?.nickname}</div>
+          <div>{data.users?.nickname}</div>
         </div>
-        <h3>{data?.title}</h3>
-        <a href={`${data?.link}`}>{data?.link}</a>
-        <p>{data?.contents}</p>
+        <h3>{data.title}</h3>
+        <a href={data.link}>{data.link}</a>
+        <p>{data.contents}</p>
         <Button className="px-4 py-2 w-20 self-center m-1 w rounded-3xl transition duration-300 shadow-md text-white text-sm bg-primary hover:bg-opacity-70">
-          추천 {data?.likes}
+          추천 {data.likes}
         </Button>
       </div>
       <ul className="mx-auto max-w-3xl flex flex-col gap-4">
