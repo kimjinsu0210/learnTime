@@ -64,22 +64,23 @@ const Details = () => {
       return Alert("좋아요 기능은 로그인 후 이용 가능합니다. ");
     }
   };
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || !data) return <div>Loading...</div>;
+
   return (
     <div>
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
           <div className="flex items-center justify-center w-16 h-16 rounded-full">
             <img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data?.users?.profileImgUrl}`}
-              alt={`${data?.users?.profileImgUrl}`}
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data.users?.profileImgUrl}`}
+              alt={`${data.users?.profileImgUrl}`}
             />
           </div>
-          <div>{data?.users?.nickname}</div>
+          <div>{data.users?.nickname}</div>
         </div>
-        <h3>{data?.title}</h3>
-        <a href={`${data?.link}`}>{data?.link}</a>
-        <p>{data?.contents}</p>
+        <h3>{data.title}</h3>
+        <a href={`${data.link}`}>{data.link}</a>
+        <p>{data.contents}</p>
         {likeState ? (
           <AiFillLike
             className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
