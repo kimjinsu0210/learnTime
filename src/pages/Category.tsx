@@ -22,7 +22,6 @@ const Category = () => {
   if (error) return <div>error</div>;
 
   const test = categoryData?.uid;
-  console.log("category: " + test);
 
   return (
     <main className="py-10 min-height-calc">

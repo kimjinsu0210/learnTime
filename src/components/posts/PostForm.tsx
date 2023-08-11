@@ -42,8 +42,6 @@ const PostForm = ({ categoryId }: Props) => {
     unmount("post");
   };
 
-  console.log(session);
-
   return (
     <div className="flex flex-col items-center gap-5 px-4 py-1">
       <div className="flex justify-center">

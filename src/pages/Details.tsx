@@ -8,6 +8,7 @@ import { FormEvent, useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import { AiFillLike } from "react-icons/ai";
+import { TiArrowBack } from "react-icons/ti";
 
 const COMMENTS = [
   { id: "aa", contents: "asdf", createdAt: "20231210", postId: "31231", userId: "aseff" },
@@ -21,6 +22,7 @@ const Details = () => {
   const params = useParams();
   const { Alert } = useDialog();
   const [likeState, setLikeState] = useState<Boolean>(false);
+  const [postLikes, setPostLikes] = useState<number | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ["detail", params.id],
     queryFn: () => getDetailData(params.id)
@@ -35,64 +37,88 @@ const Details = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: selectData } = await supabase
-        .from("likes")
-        .select()
-        .eq("userId", session?.user.id)
-        .eq("postId", params.id);
-      if (selectData?.length === 0) {
-        setLikeState(false);
-      } else {
-        setLikeState(true);
+      if (session) {
+        const { data: selectData } = await supabase
+          .from("likes")
+          .select()
+          .eq("userId", session?.user.id)
+          .eq("postId", params.id);
+        if (selectData?.length === 0) {
+          setLikeState(false);
+        } else {
+          setLikeState(true);
+        }
+
+        const { data } = await supabase.from("posts").select("likes").eq("id", params.id).single();
+
+        if (data) {
+          setPostLikes(data.likes);
+        }
       }
     };
     fetchData();
-  }, [session, params]);
+  }, [session, params, postLikes]);
 
   const likeClickHandler = async () => {
     if (session) {
       if (!likeState) {
-        const { error: insertError } = await supabase
-          .from("likes")
-          .insert({ userId: session.user.id, postId: params.id });
-        console.log("insertError", insertError);
+        await supabase.from("likes").insert({ userId: session.user.id, postId: params.id });
         setLikeState(true);
       } else {
         await supabase.from("likes").delete().eq("userId", session.user.id).eq("postId", params.id);
         setLikeState(false);
       }
+      postLikeCount();
     } else {
       return Alert("좋아요 기능은 로그인 후 이용 가능합니다. ");
     }
   };
-  if (isLoading || !data) return <div>Loading...</div>;
+  const postLikeCount = async () => {
+    if (postLikes || postLikes === 0) {
+      const newLikes = likeState ? postLikes - 1 : postLikes + 1;
+      setPostLikes(newLikes);
+      await supabase.from("posts").update({ likes: newLikes }).eq("id", params.id);
+    }
+  };
 
+  if (isLoading || !data) return <div>Loading...</div>;
+  const handleGoBack = () => {
+    window.history.back();
+  };
   return (
     <div>
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
-          <div className="flex items-center justify-center w-16 h-16 rounded-full">
-            <img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data.users?.profileImgUrl}`}
-              alt={`${data.users?.profileImgUrl}`}
-            />
-          </div>
-          <div>{data.users?.nickname}</div>
+          <img
+            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data.users?.profileImgUrl}`}
+            alt={`${data.users?.profileImgUrl}`}
+            className="w-[50px] h-[50px] rounded-full"
+          />
+          <div className="font-bold text-[18px]">{data.users?.nickname}</div>
         </div>
         <h3>{data.title}</h3>
         <a href={`${data.link}`}>{data.link}</a>
         <p>{data.contents}</p>
-        {likeState ? (
-          <AiFillLike
-            className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
-            onClick={likeClickHandler}
-          />
-        ) : (
-          <AiFillLike
+        <div className="flex justify-between">
+          <TiArrowBack
             className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
-            onClick={likeClickHandler}
+            onClick={handleGoBack}
           />
-        )}
+          <div className="flex">
+            {likeState ? (
+              <AiFillLike
+                className="text-primary text-[40px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+                onClick={likeClickHandler}
+              />
+            ) : (
+              <AiFillLike
+                className="text-[#c0c0c0] text-[40px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+                onClick={likeClickHandler}
+              />
+            )}
+            <p className="text-[25px] ml-3">{postLikes}</p>
+          </div>
+        </div>
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {COMMENTS.map(comment => (
