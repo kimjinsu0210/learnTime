@@ -1,11 +1,14 @@
 import { supabase } from "api/supabaseClient";
 import Button from "components/button/Button";
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { getDetailData } from "components/posts/api";
+import useSessionStore from "components/zustand/store";
 import useInput from "hooks/useInput";
-import { FormEvent } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
-
+import { AiFillLike } from "react-icons/ai";
+import { async } from "q";
 const COMMENTS = [
   { id: "aa", contents: "asdf", createdAt: "20231210", postId: "31231", userId: "aseff" },
   { id: "aab", contents: "asdsdsf", createdAt: "20231211", postId: "31231", userId: "asefdf" },
@@ -13,9 +16,11 @@ const COMMENTS = [
 ];
 
 const Details = () => {
+  const session = useSessionStore(state => state.session);
   const [comment, handleComment, setComment] = useInput();
   const params = useParams();
-
+  const { Alert } = useDialog();
+  const [likeState, setLikeState] = useState<Boolean>(false);
   const { data, isLoading } = useQuery({
     queryKey: ["detail", params.id],
     queryFn: () => getDetailData(params.id)
@@ -28,6 +33,37 @@ const Details = () => {
     setComment("");
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: selectData } = await supabase
+        .from("likes")
+        .select()
+        .eq("userId", session?.user.id);
+      if (selectData?.length === 0) {
+        setLikeState(false);
+      } else {
+        setLikeState(true);
+      }
+    };
+    fetchData();
+  }, [session]);
+
+  const likeClickHandler = async () => {
+    if (session) {
+      if (!likeState) {
+        const { error: insertError } = await supabase
+          .from("likes")
+          .insert({ userId: session.user.id, postId: params.id });
+        console.log("insertError", insertError);
+        setLikeState(true);
+      } else {
+        const { error } = await supabase.from("likes").delete().eq("userId", session.user.id);
+        setLikeState(false);
+      }
+    } else {
+      return Alert("좋아요 기능은 로그인 후 이용 가능합니다. ");
+    }
+  };
   if (isLoading || !data) return <div>Loading...</div>;
 
   return (
@@ -43,11 +79,19 @@ const Details = () => {
           <div>{data.users?.nickname}</div>
         </div>
         <h3>{data.title}</h3>
-        <a href={data.link}>{data.link}</a>
+        <a href={`${data.link}`}>{data.link}</a>
         <p>{data.contents}</p>
-        <Button className="px-4 py-2 w-20 self-center m-1 w rounded-3xl transition duration-300 shadow-md text-white text-sm bg-primary hover:bg-opacity-70">
-          추천 {data.likes}
-        </Button>
+        {likeState ? (
+          <AiFillLike
+            className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+            onClick={likeClickHandler}
+          />
+        ) : (
+          <AiFillLike
+            className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+            onClick={likeClickHandler}
+          />
+        )}
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {COMMENTS.map(comment => (
