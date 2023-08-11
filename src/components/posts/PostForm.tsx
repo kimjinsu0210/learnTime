@@ -1,10 +1,13 @@
 import { supabase } from "api/supabaseClient";
+import { addPost } from "api/supabaseDatabaseFn";
 import Button from "components/button/Button";
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { useModal } from "components/overlay/modal/Modal.hooks";
 import useSessionStore from "components/zustand/store";
 import useInput from "hooks/useInput";
 import { FormEvent } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router";
 
 interface Props {
   categoryId: string | undefined;
@@ -17,6 +20,26 @@ const PostForm = ({ categoryId }: Props) => {
   const [link, handleChangeLink] = useInput();
   const [contents, handleChangeContents] = useInput();
   const session = useSessionStore(state => state.session);
+  const queryClient = useQueryClient();
+  const param = useParams();
+  const paramCategoryName = param.category;
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      await supabase.from("posts").insert({
+        title,
+        link,
+        contents,
+        categoryId,
+        userId: session?.user.id,
+        userEmail: session?.user.email,
+        likes: 0
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("getCategory");
+    }
+  });
 
   const handleCancel = () => {
     unmount("post");
@@ -29,15 +52,27 @@ const PostForm = ({ categoryId }: Props) => {
       await Alert("항목들을 모두 채워주세요.");
       return;
     }
-    await supabase.from("posts").insert({
-      title,
-      link,
-      contents,
-      categoryId,
-      userId: session?.user.id,
-      userEmail: session?.user.email,
-      likes: 0
-    });
+    mutate();
+    // mutation.mutate({
+    //   title,
+    //   link,
+    //   contents,
+    //   categoryId: categoryId ? categoryId : null,
+    //   userId: session?.user.id,
+    //   userEmail: null,
+    //   likes: 0
+    // });
+
+    // await supabase.from("posts").insert({
+    //   title,
+    //   link,
+    //   contents,
+    //   categoryId,
+    //   userId: session?.user.id,
+    //   userEmail: session?.user.email,
+    //   likes: 0
+    // });
+
     await Alert("작성완료");
     unmount("post");
   };
