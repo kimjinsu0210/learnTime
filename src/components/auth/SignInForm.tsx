@@ -19,8 +19,8 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
 
   return (
     <form onSubmit={signInHandler} className="p-[5px]">
-      <div className="mb-5 flex justify-center">로그인</div>
-      <div className="flex flex-col m-2 gap-2">
+      <div className="flex justify-center mb-5">로그인</div>
+      <div className="flex flex-col gap-2 m-2">
         {/* <label>이메일</label> */}
         <input
           className="auth-input"
@@ -44,8 +44,8 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
         />
       </div>
       <div className="flex justify-center">
-        <Button onClick={() => unmount("signIn")}>취소</Button>
         <Button>로그인</Button>
+        <Button onClick={() => unmount("signIn")}>취소</Button>
       </div>
     </form>
   );
