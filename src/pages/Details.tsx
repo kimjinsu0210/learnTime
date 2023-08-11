@@ -33,13 +33,16 @@ const Details = () => {
     <div>
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
-          <div className="flex items-center justify-center w-16 h-16 bg-yellow-200 rounded-full">
-            <img alt={`${data?.users?.profileImgUrl}`} />
+          <div className="flex items-center justify-center w-16 h-16 rounded-full">
+            <img
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data?.users?.profileImgUrl}`}
+              alt={`${data?.users?.profileImgUrl}`}
+            />
           </div>
           <div>{data?.users?.nickname}</div>
         </div>
         <h3>{data?.title}</h3>
-        <a href="https://github.com/kimjinsu0210/learntime">{data?.link}</a>
+        <a href={`${data?.link}`}>{data?.link}</a>
         <p>{data?.contents}</p>
         <Button className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md w rounded-3xl bg-primary hover:bg-opacity-70">
           추천 {data?.likes}
