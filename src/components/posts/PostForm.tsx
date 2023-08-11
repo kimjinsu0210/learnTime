@@ -1,10 +1,14 @@
 import { supabase } from "api/supabaseClient";
+import Button from "components/button/Button";
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { useModal } from "components/overlay/modal/Modal.hooks";
-import Button from "components/button/Button";
 import useInput from "hooks/useInput";
 
-const PostForm = () => {
+interface Props {
+  categoryId: string | undefined;
+}
+
+const PostForm = ({ categoryId }: Props) => {
   const { unmount } = useModal();
   const { Alert } = useDialog();
   const [title, handleChangeTitle] = useInput();
@@ -16,7 +20,7 @@ const PostForm = () => {
   };
 
   const handlePost = async () => {
-    await supabase.from("posts").insert({ title, link, contents });
+    await supabase.from("posts").insert({ title, link, contents, categoryId });
     await Alert("작성완료");
     unmount("post");
   };

@@ -5,7 +5,7 @@ export const SignOut = () => {
     const { error } = await supabase.auth.signOut();
   };
   return (
-    <p className="text-xl font-bold cursor-pointer" onClick={signOutHandler}>
+    <p className="cursor-pointer text-md" onClick={signOutHandler}>
       로그아웃
     </p>
   );

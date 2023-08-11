@@ -7,7 +7,7 @@ export const SignUp = () => {
     mount("signUp", <SignUpForm unmount={unmount} />);
   };
   return (
-    <p className="text-md cursor-pointer text-gray-200" onClick={signUpModalHandler}>
+    <p className="cursor-pointer text-md" onClick={signUpModalHandler}>
       회원가입
     </p>
   );
