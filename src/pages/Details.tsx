@@ -27,47 +27,49 @@ const Details = () => {
     await supabase.from("comments").insert({ contents: comment, postId: params.id });
     setComment("");
   };
-  console.log(params);
 
   if (isLoading) return <div>Loading...</div>;
   return (
     <div>
-      <div className="bg-gray-200 max-w-3xl mx-auto my-10 rounded-lg p-6 flex flex-col gap-5">
+      <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
-          <div className="flex justify-center items-center bg-yellow-200 w-16 h-16 rounded-full">
-            <img alt={`${data?.users?.profileImgUrl}`} />
+          <div className="flex items-center justify-center w-16 h-16 rounded-full">
+            <img
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${data?.users?.profileImgUrl}`}
+              alt={`${data?.users?.profileImgUrl}`}
+            />
           </div>
           <div>{data?.users?.nickname}</div>
         </div>
         <h3>{data?.title}</h3>
-        <a href="https://github.com/kimjinsu0210/learntime">{data?.link}</a>
+        <a href={`${data?.link}`}>{data?.link}</a>
         <p>{data?.contents}</p>
-        <Button className="px-4 py-2 w-20 self-center m-1 w rounded-3xl transition duration-300 shadow-md text-white text-sm bg-primary hover:bg-opacity-70">
+        <Button className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md w rounded-3xl bg-primary hover:bg-opacity-70">
           추천 {data?.likes}
         </Button>
       </div>
-      <ul className="mx-auto max-w-3xl flex flex-col gap-4">
+      <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {COMMENTS.map(comment => (
           <li key={comment.id} className="flex items-center gap-3 text-white">
-            <div className="flex justify-center items-center bg-yellow-200 w-8 h-8 rounded-full">
+            <div className="flex items-center justify-center w-8 h-8 bg-yellow-200 rounded-full">
               <img alt="" />
             </div>
-            <div className="flex gap-10 border-b border-white w-full pb-1">
+            <div className="flex w-full gap-10 pb-1 border-b border-white">
               <div>닉네임</div>
               <p>{comment.contents}</p>
             </div>
           </li>
         ))}
       </ul>
-      <form onSubmit={handleSubmitComment} className="flex mx-auto max-w-3xl my-10 gap-4">
+      <form onSubmit={handleSubmitComment} className="flex max-w-3xl gap-4 mx-auto my-10">
         <input
           value={comment}
           onChange={handleComment}
-          className="w-full bg-black rounded-3xl text-white m-1 px-4"
+          className="w-full px-4 m-1 text-white bg-black rounded-3xl"
         />
         <Button
           type="submit"
-          className="px-4 min-w-fit py-2 w-20 self-center m-1 w rounded-3xl transition duration-300 shadow-md text-white text-sm bg-primary hover:bg-opacity-70"
+          className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
         >
           입력
         </Button>

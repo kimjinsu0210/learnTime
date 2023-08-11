@@ -60,11 +60,9 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
       else if (authError?.message === "User already registered")
         return Alert("이미 일치하는 회원이 존재합니다.");
     }
-
     if (dbError) return Alert("db에러발생");
-
     unmount("signUp");
-    return alert("회원가입이 정상적으로 처리 되었습니다!");
+    return Alert("회원가입이 정상적으로 처리 되었습니다!");
   };
   return (
     <form onSubmit={signUpHandler} className="p-[5px]">
