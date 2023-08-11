@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { supabase } from "api/supabaseClient";
-import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import Button from "components/button/Button";
 import { uuid } from "@supabase/gotrue-js/dist/module/lib/helpers";
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
+import { useState } from "react";
 
 const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
   const [email, setEmail] = useState<string>("");
