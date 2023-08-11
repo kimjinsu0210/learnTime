@@ -13,7 +13,7 @@ export const getCategoryId = async (params: string | undefined) => {
 export const getComments = async (postId: string | undefined) => {
   const { data } = await supabase
     .from("comments")
-    .select("id, contents, users(nickname, profileImgUrl)")
+    .select("id, contents, users(nickname, profileImgUrl, id)")
     .eq("postId", postId);
   return data;
 };
