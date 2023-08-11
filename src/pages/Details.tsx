@@ -1,16 +1,13 @@
 import { supabase } from "api/supabaseClient";
+import { DeleteIcon, UpdateIcon } from "assets";
 import Button from "components/button/Button";
-import { getComments, getDetailData } from "components/posts/api";
-
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-
+import { getComments, getDetailData } from "components/posts/api";
 import useSessionStore from "components/zustand/store";
 import useInput from "hooks/useInput";
 import { FormEvent, useEffect, useState } from "react";
-
-import { DeleteIcon, UpdateIcon } from "assets";
 import { AiFillLike } from "react-icons/ai";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 
 const Details = () => {
