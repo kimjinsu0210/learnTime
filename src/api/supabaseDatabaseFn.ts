@@ -13,7 +13,9 @@ export const getCategoryDetail = async (categoryName?: string) => {
 export const getCategory = async (categoryName?: string) => {
   const { data } = await supabase
     .from("category")
-    .select("uid, posts(categoryId,title,contents, link, likes, users(nickname, profileImgUrl))")
+    .select(
+      "uid, posts(id, categoryId, title, contents, link, likes, users(nickname, profileImgUrl))"
+    )
     .eq("name", categoryName)
     .single();
   return data;

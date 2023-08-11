@@ -45,7 +45,7 @@ export default function PostListByCategory() {
                     <p className="text-ellipsis line-clamp-1">{post.users?.nickname}</p>
                   </div>
                   <p className="col-span-7 text-ellipsis line-clamp-1 hover:text-primary">
-                    <Link to={`details/${post.categoryId}`}>{post.title}</Link>
+                    <Link to={`/details/${post.id}`}>{post.title}</Link>
                   </p>
                   <p className="col-span-2 text-center text-gray-600">추천수 {post.likes ?? `0`}</p>
                 </li>
