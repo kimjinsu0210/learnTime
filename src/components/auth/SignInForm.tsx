@@ -1,7 +1,7 @@
 import { supabase } from "api/supabaseClient";
 import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import { useState } from "react";
-import { AiFillCloseCircle } from "react-icons/ai";
+import Button from "components/button/Button";
 
 const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
   const [loginEmail, setLoginEmail] = useState<string>("");
@@ -13,22 +13,18 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
       email: loginEmail,
       password: loginPassword
     });
-    if (error) Alert("아이디 또는 비밀번호가 일치하지 않습니다.")
+    if (error) Alert("아이디 또는 비밀번호가 일치하지 않습니다.");
     else unmount("signIn");
   };
 
   return (
-    <form onSubmit={signInHandler} className="p-[20px]">
-      <div className="flex justify-end">
-        <AiFillCloseCircle
-          className="text-3xl text-red-500 cursor-pointer"
-          onClick={() => unmount("signIn")}
-        />
-      </div>
-      <div className="flex flex-col gap-4">
-        <label>이메일</label>
+    <form onSubmit={signInHandler} className="p-[5px]">
+      <div className="flex justify-center mb-5">로그인</div>
+      <div className="flex flex-col gap-2 m-2">
+        {/* <label>이메일</label> */}
         <input
           className="auth-input"
+          placeholder=" email"
           type="text"
           value={loginEmail}
           onChange={e => {
@@ -36,9 +32,10 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
           }}
           autoFocus
         />
-        <label>비밀번호</label>
+        {/* <label>비밀번호</label> */}
         <input
           className="auth-input"
+          placeholder=" password"
           type="password"
           value={loginPassword}
           onChange={e => {
@@ -46,8 +43,9 @@ const SignInForm = ({ unmount }: { unmount: (name: string) => void }) => {
           }}
         />
       </div>
-      <div className="flex justify-end">
-        <button className="p-2 mt-8 text-white bg-red-500 rounded-lg">로그인</button>
+      <div className="flex justify-center">
+        <Button>로그인</Button>
+        <Button onClick={() => unmount("signIn")}>취소</Button>
       </div>
     </form>
   );

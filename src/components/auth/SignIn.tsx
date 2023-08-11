@@ -9,7 +9,7 @@ export const SignIn = () => {
   };
 
   return (
-    <p className="pr-5 text-xl font-bold cursor-pointer" onClick={signInModalHandler}>
+    <p className="mr-5 cursor-pointer text-md" onClick={signInModalHandler}>
       로그인
     </p>
   );

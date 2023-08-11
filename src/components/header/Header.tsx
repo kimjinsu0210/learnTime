@@ -3,39 +3,28 @@ import { Link } from "react-router-dom";
 import { supabase } from "api/supabaseClient";
 import { SignIn, SignOut, SignUp } from "components/auth/index";
 import useSessionStore from "components/zustand/store";
-
-import { BiMessageSquareError } from "react-icons/bi";
-import { FaSpinner } from "react-icons/fa";
-import logo from "assets/learntime_logo.gif";
-import logo2 from "assets/learntime_logo2.gif";
+import { BiSolidErrorCircle } from "react-icons/bi";
+import defaultImg from "assets/defaultImg.png";
 
 const Header: React.FC = () => {
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
+  const storageUrl = process.env.REACT_APP_SUPABASE_STORAGE_URL;
+  const addedSession = session?.user.user_metadata;
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      console.log("sessionData", session);
-      console.log("loginEmail", session?.user.email);
-      console.log("loginNickname", session?.user.user_metadata.nickname);
-      console.log("loginProfileImgUrl", session?.user.user_metadata.profileImgUrl);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
   }, [setSession]);
-
   return (
-    <header className="flex items-center justify-between px-4 py-2 text-gray-700 bg-gray-200">
+    <header className="fixed top-0 z-30 flex items-center justify-between w-full px-4 py-5 text-white bg-mainDark1">
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
-          <BiMessageSquareError size="24" color="red" />
-          <div className="flex items-center justify-center animate-spin">
-            <FaSpinner className="text-4xl text-red-500" />
-          </div>
-          <img src={logo} alt="" className="w-[40px]" />
-          <img src={logo2} alt="" className="w-[40px]" />
-          <h1 className="ml-2 text-xl font-bold">런타임</h1>
+          <BiSolidErrorCircle size="25" color="white" />
+          <h1 className="ml-2 text-xl font-bold">LearnTime</h1>
         </Link>
       </div>
       <div className="flex items-center">
@@ -43,12 +32,16 @@ const Header: React.FC = () => {
           <>
             <Link to="/mypage">
               <img
-                src={session?.user.user_metadata.profileImgUrl}
+                src={
+                  addedSession?.profileImgUrl
+                    ? `${storageUrl}/${addedSession?.profileImgUrl}`
+                    : defaultImg
+                }
                 alt="profileImg"
-                className="w-[40px] rounded-full"
+                className="w-[30px] h-[30px] rounded-full"
               />
             </Link>
-            <p>{session?.user.user_metadata.nickname}</p>
+            <p className="mx-1 text-md">{addedSession?.nickname}</p>
             <SignOut />
           </>
         ) : (

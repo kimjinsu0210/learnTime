@@ -1,5 +1,6 @@
 import { Session } from "@supabase/supabase-js";
 import { create } from "zustand";
+
 interface SessionStore {
   session: Session | null;
   setSession: (newSession: Session | null) => void;
