@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { supabase } from "api/supabaseClient";
+import defaultImg from "assets/defaultImg.png";
 import { SignIn, SignOut, SignUp } from "components/auth/index";
 import useSessionStore from "components/zustand/store";
+import { useEffect } from "react";
 import { BiSolidErrorCircle } from "react-icons/bi";
-import defaultImg from "assets/defaultImg.png";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const session = useSessionStore(state => state.session);
@@ -19,6 +19,8 @@ const Header: React.FC = () => {
       setSession(session);
     });
   }, [setSession]);
+
+  console.log(session);
   return (
     <header className="fixed top-0 z-30 flex items-center justify-between w-full px-4 py-5 text-white bg-mainDark1">
       <div className="flex items-center">

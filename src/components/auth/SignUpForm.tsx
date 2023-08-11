@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { supabase } from "api/supabaseClient";
-import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 import Button from "components/button/Button";
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
+import { useState } from "react";
 
 const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
   const [email, setEmail] = useState<string>("");
@@ -26,13 +26,14 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
     let profileUrl = null;
     if (profileFile) {
       //이미지 storage 저장 로직
-      const { data } = await supabase.storage
+      const { data, error } = await supabase.storage
         .from("profileImgs")
         .upload(`profile_Images/${email}/${profileFile.name}`, profileFile, {
           cacheControl: "3600",
           upsert: false
         });
       profileUrl = data?.path;
+      console.log(error);
     }
 
     //auth 생성
@@ -52,7 +53,7 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
         return Alert("이메일 형태가 올바르지 않습니다.");
       else if (authError?.message === "User already registered")
         return Alert("이미 일치하는 회원이 존재합니다.");
-    } 
+    }
 
     //database 생성
     const { error: dbError } = await supabase
