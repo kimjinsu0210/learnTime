@@ -1,6 +1,5 @@
 import { useLockBodyScroll } from "hooks/useLockBodyScroll";
 import { MouseEvent, ReactNode } from "react";
-import { createPortal } from "react-dom";
 import { useOverlayContext } from "../Overlay.context";
 
 interface Props {
@@ -22,14 +21,13 @@ const Modal = ({ children, name }: Props) => {
 
   useLockBodyScroll(true);
 
-  return createPortal(
+  return (
     <div
       className="fixed top-0 left-0 z-40 flex items-center justify-center w-full h-full bg-black bg-opacity-30"
       onClick={handleClose}
     >
       <div className="max-w-lg p-5 text-white rounded-lg bg-mainDark1">{children}</div>
-    </div>,
-    document.getElementById("modal") as HTMLElement
+    </div>
   );
 };
 

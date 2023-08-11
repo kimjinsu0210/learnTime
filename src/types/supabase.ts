@@ -128,6 +128,7 @@ export interface Database {
       };
       posts: {
         Row: {
+          [x: string]: any;
           categoryId: string | null;
           contents: string | null;
           createdAt: string;

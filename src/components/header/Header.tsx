@@ -21,6 +21,7 @@ const Header: React.FC = () => {
   }, [setSession]);
   return (
     <header className="fixed top-0 z-30 flex items-center justify-between w-full px-4 py-5 text-white bg-mainDark1">
+      {/* postForm 심기.. */}
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
           <BiSolidErrorCircle size="25" color="white" />

@@ -28,8 +28,8 @@ export const Dialog = ({ onClose, onSucess, type, children }: Props) => {
         <p>{children}</p>
         {type === "Confirm" ? (
           <div className="flex gap-4">
-            <button onClick={onClose}>취소</button>
-            <button onClick={onSucess}>확인</button>
+            <Button onClick={onClose}>취소</Button>
+            <Button onClick={onSucess}>확인</Button>
           </div>
         ) : (
           <div className="flex justify-end gap-5 mt-5">

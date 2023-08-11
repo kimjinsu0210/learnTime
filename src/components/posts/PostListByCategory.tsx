@@ -17,6 +17,7 @@ export default function PostListByCategory() {
       queryFn: () => getCategory(paramCategoryName)
     });
   };
+
   const { data: PostData, error, isLoading } = useFetchPosts();
 
   if (isLoading || !PostData) return <div>Loading...</div>;
