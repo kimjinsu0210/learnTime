@@ -65,9 +65,9 @@ const MyPage = () => {
       await supabase.from("posts").delete().eq("id", postId);
 
       alert("삭제 완료");
-      window.location.reload();
+      loadMyPosts();
     } catch (error) {
-      alert("데이터를 삭제 실패");
+      alert("게시글 삭제 중 오류 발생");
     }
   };
 
