@@ -8,7 +8,7 @@ import { FormEvent, useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import { AiFillLike } from "react-icons/ai";
-import { async } from "q";
+
 const COMMENTS = [
   { id: "aa", contents: "asdf", createdAt: "20231210", postId: "31231", userId: "aseff" },
   { id: "aab", contents: "asdsdsf", createdAt: "20231211", postId: "31231", userId: "asefdf" },
@@ -38,7 +38,8 @@ const Details = () => {
       const { data: selectData } = await supabase
         .from("likes")
         .select()
-        .eq("userId", session?.user.id);
+        .eq("userId", session?.user.id)
+        .eq("postId", params.id);
       if (selectData?.length === 0) {
         setLikeState(false);
       } else {
@@ -46,7 +47,7 @@ const Details = () => {
       }
     };
     fetchData();
-  }, [session]);
+  }, [session, params]);
 
   const likeClickHandler = async () => {
     if (session) {
@@ -57,7 +58,7 @@ const Details = () => {
         console.log("insertError", insertError);
         setLikeState(true);
       } else {
-        const { error } = await supabase.from("likes").delete().eq("userId", session.user.id);
+        await supabase.from("likes").delete().eq("userId", session.user.id).eq("postId", params.id);
         setLikeState(false);
       }
     } else {
