@@ -1,46 +1,101 @@
-# Getting Started with Create React App
+## ⛔️ 런타임 (Learntime)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+프론트엔드 비기너 스터디 커뮤니티
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 팀구성
 
-### `yarn start`
+| 임지영 | 김진수 | 제준영 | 백연주 | 전수정 |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 사용 STACKS
 
-### `yarn test`
+- **TypeScript**
+- **Supabase**
+- **Zustand**
+- **Tailwind CSS**
+- React
+- HTML
+- Github
+- ReactQuery(TanstackQuery)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `yarn build`
+## 깃 플로우 전략
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- main
+- dev
+- feat
+  - category/
+  - detail/
+  - comment
+  - header
+  - footer
+  - modal
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 커밋 컨벤션
 
-### `yarn eject`
+- Feat: 새로운 기능 추가
+- Fix: 버그 수정
+- Docs: 문서 변경
+- Style: 코드 formatting, 세미콜론 누락, 코드 자체의 변경이 없는 경우
+- Refactor: 코드 리팩토링 (변수명 변경 등)
+- Chore: 설정 변경 등 기타 변경사항
+- Design: HTML, CSS 등 사용자 UI 디자인 변경
+- Resolve: 충돌 해결
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+---
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 코드 컨벤션
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 폴더, 파일명
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+컴포넌트 파일명은 파스칼 케이스(PascalCase)를 사용한다.
 
-## Learn More
+```javascript
+MainComponent.jsx;
+Route.jsx;
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+컴포넌트를 제외한 폴더, 파일명은 카멜 케이스(camelCase)를 사용한다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+components;
+modules;
+configStore.js;
+```
+
+### 함수
+
+함수명은 카멜 케이스(camelCase)를 원칙으로 한다.
+
+```javascript
+function nameOfFunction() {
+  // ...some logic
+}
+```
+
+### 변수명
+
+상수는 모두 대문자로 쓰며 띄어쓰기는 \_로 처리하며, 객체타입의 경우 카멜 케이스를 적용한다.
+
+```javascript
+const SOME_VALUE = 1;
+
+const people = {
+  name: "김자바",
+  age: "26"
+};
+```
+
+### 클래스명
+
+클래스명은 케밥 케이스(kebab-case)를 원칙으로 한다.
+
+```html
+<h1 class="main-title">오늘 메뉴 추천</h1>
+```
