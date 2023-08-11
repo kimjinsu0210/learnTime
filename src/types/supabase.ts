@@ -31,7 +31,7 @@ export interface Database {
       category: {
         Row: {
           link: string | null;
-          name: string | null;
+          name: string;
           ogDescription: string | null;
           ogImgUrl: string | null;
           ogTitle: string | null;
@@ -40,7 +40,7 @@ export interface Database {
         };
         Insert: {
           link?: string | null;
-          name?: string | null;
+          name?: string;
           ogDescription?: string | null;
           ogImgUrl?: string | null;
           ogTitle?: string | null;
@@ -49,7 +49,7 @@ export interface Database {
         };
         Update: {
           link?: string | null;
-          name?: string | null;
+          name?: string;
           ogDescription?: string | null;
           ogImgUrl?: string | null;
           ogTitle?: string | null;
@@ -97,17 +97,17 @@ export interface Database {
       };
       likes: {
         Row: {
-          id: number;
+          id: string;
           postId: string | null;
           userId: string;
         };
         Insert: {
-          id?: number;
+          id?: string;
           postId?: string | null;
           userId: string;
         };
         Update: {
-          id?: number;
+          id?: string;
           postId?: string | null;
           userId?: string;
         };
@@ -134,8 +134,9 @@ export interface Database {
           createdAt: string;
           id: string;
           likes: number | null;
-          link: string | null;
+          link: string;
           title: string | null;
+          userEmail: string | null;
           userId: string | null;
         };
         Insert: {
@@ -144,8 +145,9 @@ export interface Database {
           createdAt?: string;
           id?: string;
           likes?: number | null;
-          link?: string | null;
+          link?: string;
           title?: string | null;
+          userEmail?: string | null;
           userId?: string | null;
         };
         Update: {
@@ -154,8 +156,9 @@ export interface Database {
           createdAt?: string;
           id?: string;
           likes?: number | null;
-          link?: string | null;
+          link?: string;
           title?: string | null;
+          userEmail?: string | null;
           userId?: string | null;
         };
         Relationships: [
@@ -168,37 +171,6 @@ export interface Database {
           {
             foreignKeyName: "posts_userId_fkey";
             columns: ["userId"];
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
-      todos: {
-        Row: {
-          id: number;
-          inserted_at: string;
-          is_complete: boolean | null;
-          task: string | null;
-          user_id: string;
-        };
-        Insert: {
-          id?: number;
-          inserted_at?: string;
-          is_complete?: boolean | null;
-          task?: string | null;
-          user_id: string;
-        };
-        Update: {
-          id?: number;
-          inserted_at?: string;
-          is_complete?: boolean | null;
-          task?: string | null;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "todos_user_id_fkey";
-            columns: ["user_id"];
             referencedRelation: "users";
             referencedColumns: ["id"];
           }
