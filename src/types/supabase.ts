@@ -133,7 +133,7 @@ export interface Database {
           createdAt: string;
           id: string;
           likes: number | null;
-          link: string | null;
+          link: string;
           title: string | null;
           userEmail: string | null;
           userId: string | null;
@@ -144,7 +144,7 @@ export interface Database {
           createdAt?: string;
           id?: string;
           likes?: number | null;
-          link?: string | null;
+          link?: string;
           title?: string | null;
           userEmail?: string | null;
           userId?: string | null;
@@ -155,7 +155,7 @@ export interface Database {
           createdAt?: string;
           id?: string;
           likes?: number | null;
-          link?: string | null;
+          link?: string;
           title?: string | null;
           userEmail?: string | null;
           userId?: string | null;

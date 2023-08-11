@@ -18,7 +18,7 @@ export const getComments = async (postId: string | undefined) => {
 export const getDetailData = async (postId: string | undefined) => {
   const { data } = await supabase
     .from("posts")
-    .select(" title, link, contents, likes, users(nickname, profileImgUrl)")
+    .select("title, link, contents, likes, users(nickname, profileImgUrl)")
     .eq("id", postId)
     .single();
   return data;
