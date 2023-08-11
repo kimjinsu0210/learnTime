@@ -45,7 +45,7 @@ const PostForm = ({ categoryId }: Props) => {
   console.log(session);
 
   return (
-    <div className="px-4 py-1 flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-5 px-4 py-1">
       <div className="flex justify-center">
         <label>강의 노트</label>
       </div>
@@ -68,7 +68,7 @@ const PostForm = ({ categoryId }: Props) => {
           value={contents}
           placeholder=" 내용"
           onChange={handleChangeContents}
-          className="text-black w-96 h-24"
+          className="h-24 text-black w-96"
           id="contents"
         />
         <div className="flex justify-center">
