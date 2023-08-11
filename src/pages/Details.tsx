@@ -1,4 +1,8 @@
+import { supabase } from "api/supabaseClient";
 import Button from "components/button/Button";
+import useInput from "hooks/useInput";
+import { FormEvent } from "react";
+import { useParams } from "react-router";
 
 const COMMENTS = [
   { id: "aa", contents: "asdf", createdAt: "20231210", postId: "31231", userId: "aseff" },
@@ -7,6 +11,17 @@ const COMMENTS = [
 ];
 
 const Details = () => {
+  const [comment, handleComment, setComment] = useInput();
+  const params = useParams();
+
+  type Comment = (e: FormEvent<HTMLFormElement>) => void;
+  const handleSubmitComment: Comment = async e => {
+    e.preventDefault();
+    await supabase.from("comments").insert({ contents: comment, postId: params.id });
+    setComment("");
+  };
+  console.log(params);
+
   return (
     <div>
       <div className="bg-gray-200 max-w-3xl mx-auto my-10 rounded-lg p-6 flex flex-col gap-5">
@@ -36,6 +51,19 @@ const Details = () => {
           </li>
         ))}
       </ul>
+      <form onSubmit={handleSubmitComment} className="flex mx-auto max-w-3xl my-10 gap-4">
+        <input
+          value={comment}
+          onChange={handleComment}
+          className="w-full bg-black rounded-3xl text-white m-1 px-4"
+        />
+        <Button
+          type="submit"
+          className="px-4 min-w-fit py-2 w-20 self-center m-1 w rounded-3xl transition duration-300 shadow-md text-white text-sm bg-primary hover:bg-opacity-70"
+        >
+          입력
+        </Button>
+      </form>
     </div>
   );
 };
