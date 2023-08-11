@@ -7,6 +7,7 @@ import useSessionStore from "components/zustand/store";
 import useInput from "hooks/useInput";
 import { FormEvent, useEffect, useState } from "react";
 import { AiFillLike } from "react-icons/ai";
+import { TiArrowBack } from "react-icons/ti";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 
@@ -18,6 +19,7 @@ const Details = () => {
   const queryClient = useQueryClient();
   const { Alert, Confirm } = useDialog();
   const [likeState, setLikeState] = useState<Boolean>(false);
+  const [postLikes, setPostLikes] = useState<number | null>(null);
 
   const { data: postDetailData, isLoading: postIsLoading } = useQuery({
     queryKey: ["detail", params.id],
@@ -67,72 +69,97 @@ const Details = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: selectData } = await supabase
-        .from("likes")
-        .select()
-        .eq("userId", session?.user.id)
-        .eq("postId", params.id);
-      if (selectData?.length === 0) {
-        setLikeState(false);
-      } else {
-        setLikeState(true);
+      if (session) {
+        const { data: selectData } = await supabase
+          .from("likes")
+          .select()
+          .eq("userId", session?.user.id)
+          .eq("postId", params.id);
+        if (selectData?.length === 0) {
+          setLikeState(false);
+        } else {
+          setLikeState(true);
+        }
+
+        const { data } = await supabase.from("posts").select("likes").eq("id", params.id).single();
+
+        if (data) {
+          setPostLikes(data.likes);
+        }
       }
     };
     fetchData();
-  }, [session, params]);
+  }, [session, params, postLikes]);
 
   const likeClickHandler = async () => {
     if (session) {
       if (!likeState) {
-        const { error: insertError } = await supabase
-          .from("likes")
-          .insert({ userId: session.user.id, postId: params.id });
-        console.log("insertError", insertError);
+        await supabase.from("likes").insert({ userId: session.user.id, postId: params.id });
         setLikeState(true);
       } else {
         await supabase.from("likes").delete().eq("userId", session.user.id).eq("postId", params.id);
         setLikeState(false);
       }
+      postLikeCount();
     } else {
       return Alert("좋아요 기능은 로그인 후 이용 가능합니다. ");
+    }
+  };
+
+  const postLikeCount = async () => {
+    if (postLikes || postLikes === 0) {
+      const newLikes = likeState ? postLikes - 1 : postLikes + 1;
+      setPostLikes(newLikes);
+      await supabase.from("posts").update({ likes: newLikes }).eq("id", params.id);
     }
   };
 
   if (postIsLoading || !postDetailData || commentsIsLoading || !commentsData)
     return <div>Loading...</div>;
 
+  const handleGoBack = () => {
+    window.history.back();
+  };
   return (
     <div>
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
-          <div className="flex items-center justify-center w-16 h-16 rounded-full">
-            <img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${postDetailData.users?.profileImgUrl}`}
-              alt={`${postDetailData.users?.profileImgUrl}`}
-            />
-          </div>
-          <div>{postDetailData.users?.nickname}</div>
+          <img
+            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${postDetailData.users?.profileImgUrl}`}
+            alt={`${postDetailData.users?.profileImgUrl}`}
+            className="w-[50px] h-[50px] rounded-full"
+          />
+          <div className="font-bold text-[18px]">{postDetailData.users?.nickname}</div>
         </div>
         <h3>{postDetailData.title}</h3>
         <a href={`${postDetailData.link}`}>{postDetailData.link}</a>
         <p>{postDetailData.contents}</p>
-        {likeState ? (
-          <AiFillLike
-            className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
-            onClick={likeClickHandler}
-          />
-        ) : (
-          <AiFillLike
+        <div className="flex justify-between">
+          <TiArrowBack
             className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
-            onClick={likeClickHandler}
+            onClick={handleGoBack}
           />
-        )}
+          <div className="flex">
+            {likeState ? (
+              <AiFillLike
+                className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+                onClick={likeClickHandler}
+              />
+            ) : (
+              <AiFillLike
+                className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+                onClick={likeClickHandler}
+              />
+            )}
+            <p className="text-[25px] ml-3">{postLikes}</p>
+          </div>
+        </div>
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {commentsData.length === 0 && <div>댓글이 없습니다.</div>}
         {commentsData.map(comment => (
           <li key={comment.id} className="flex items-center gap-3 text-white">
-            <div className="flex items-center justify-center w-8 h-8 bg-black overflow-hidden rounded-full">
+            <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
               <img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`}
                 alt={`${comment.users?.nickname}`}
@@ -143,7 +170,7 @@ const Details = () => {
               <p>{comment.contents}</p>
             </div>
             {session?.user.id === comment.users?.id && (
-              <div className="flex gap-2 absolute right-0 -translate-x-full">
+              <div className="absolute right-0 flex gap-2 -translate-x-full">
                 <UpdateIcon className="w-5 cursor-pointer stroke-white fill-white" />
                 <DeleteIcon
                   className="w-5 cursor-pointer stroke-white fill-white"

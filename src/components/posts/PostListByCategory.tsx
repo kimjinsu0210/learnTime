@@ -30,8 +30,8 @@ export default function PostListByCategory() {
           강의 노트 공유하기
         </Button>
       </div>
-      <div className="bg-mainDark1 rounded-lg p-6">
-        <h3 className="mb-4 text-white text-xl">같이 공부!</h3>
+      <div className="p-6 rounded-lg bg-mainDark1">
+        <h3 className="mb-4 text-xl text-white">같이 공부!</h3>
         {PostData.posts.length !== 0 ? (
           <ul className="bg-white rounded-lg">
             {PostData.posts.map(post => {
