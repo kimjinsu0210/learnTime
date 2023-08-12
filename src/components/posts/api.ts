@@ -14,7 +14,8 @@ export const getComments = async (postId: string | undefined) => {
   const { data } = await supabase
     .from("comments")
     .select("id, contents, users(nickname, profileImgUrl, id)")
-    .eq("postId", postId);
+    .eq("postId", postId)
+    .order("createdAt");
   return data;
 };
 

@@ -7,7 +7,6 @@ import useSessionStore from "components/zustand/store";
 import useInput from "hooks/useInput";
 import { FormEvent } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useParams } from "react-router";
 
 interface Props {
   categoryId: string | undefined;
@@ -21,8 +20,6 @@ const PostForm = ({ categoryId }: Props) => {
   const [contents, handleChangeContents] = useInput();
   const session = useSessionStore(state => state.session);
   const queryClient = useQueryClient();
-  const param = useParams();
-  const paramCategoryName = param.category;
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -53,25 +50,6 @@ const PostForm = ({ categoryId }: Props) => {
       return;
     }
     mutate();
-    // mutation.mutate({
-    //   title,
-    //   link,
-    //   contents,
-    //   categoryId: categoryId ? categoryId : null,
-    //   userId: session?.user.id,
-    //   userEmail: null,
-    //   likes: 0
-    // });
-
-    // await supabase.from("posts").insert({
-    //   title,
-    //   link,
-    //   contents,
-    //   categoryId,
-    //   userId: session?.user.id,
-    //   userEmail: session?.user.email,
-    //   likes: 0
-    // });
 
     await Alert("작성완료");
     unmount("post");
@@ -80,35 +58,37 @@ const PostForm = ({ categoryId }: Props) => {
   return (
     <div className="flex flex-col items-center gap-5 px-4 py-1">
       <div className="flex justify-center">
-        <label>강의 노트</label>
+        <label className="mb-2 text-lg font-bold">강의 노트</label>
       </div>
-      <form className="flex flex-col gap-4" onSubmit={handlePost}>
+      <form className="flex flex-col gap-3.5" onSubmit={handlePost}>
         <input
           value={title}
-          placeholder=" 제목"
+          placeholder="제목"
           onChange={handleChangeTitle}
-          className="text-black w-96"
+          className="py-1 pl-2 text-black rounded-md w-96"
           id="title"
         />
         <input
+          pl-2
           value={link}
-          placeholder=" 링크"
+          placeholder="링크"
           onChange={handleChangeLink}
-          className="text-black w-96"
+          type="url"
+          className="py-1 pl-2 text-black rounded-md w-96"
           id="link"
         />
         <textarea
           value={contents}
-          placeholder=" 내용"
+          placeholder="내용"
           onChange={handleChangeContents}
-          className="h-24 text-black w-96"
+          className="h-24 py-1 pl-2 text-black rounded-md w-96"
           id="contents"
         />
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-2">
+          <Button type="submit">저장</Button>
           <Button type="button" onClick={handleCancel}>
             취소
           </Button>
-          <Button type="submit">저장</Button>
         </div>
       </form>
     </div>
