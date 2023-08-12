@@ -10,6 +10,12 @@ import { AiFillLike } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
+import defaultImg from "assets/defaultImg.png";
+
+interface Props {
+  commentId: string;
+  contents: string;
+}
 
 const Details = () => {
   const session = useSessionStore(state => state.session);
@@ -20,6 +26,8 @@ const Details = () => {
   const { Alert, Confirm } = useDialog();
   const [likeState, setLikeState] = useState<Boolean>(false);
   const [postLikes, setPostLikes] = useState<number | null>(null);
+  const [isUpdate, setIsUpdate] = useState<string>("");
+  const [contents, handleContents, setContents] = useInput();
 
   const { data: postDetailData, isLoading: postIsLoading } = useQuery({
     queryKey: ["detail", params.id],
@@ -52,6 +60,25 @@ const Details = () => {
     }
   });
 
+  const { mutate: updateMutate } = useMutation({
+    mutationFn: async ({ commentId, contents }: Props) => {
+      await supabase.from("comments").update({ contents: contents }).eq("id", commentId);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["comments"]);
+      setIsUpdate("");
+      setContents("");
+      await Alert("댓글이 수정되었습니다.");
+    }
+  });
+
+  type SubmitCommentUpdate = (e: FormEvent<HTMLFormElement>, commentId: string) => void;
+  const handleSubmitUpdateComment: SubmitCommentUpdate = (e, commentId) => {
+    e.preventDefault();
+    updateMutate({ commentId, contents });
+    setComment("");
+  };
+
   type SubmitComment = (e: FormEvent<HTMLFormElement>) => void;
   const handleSubmitComment: SubmitComment = e => {
     e.preventDefault();
@@ -65,6 +92,12 @@ const Details = () => {
       return;
     }
     deleteMutate(commentId);
+  };
+
+  type UpdateComment = (commentId: string) => void;
+  const handleCommentUpdate: UpdateComment = commentId => {
+    console.log(commentId);
+    setIsUpdate(commentId);
   };
 
   useEffect(() => {
@@ -120,20 +153,23 @@ const Details = () => {
   const handleGoBack = () => {
     window.history.back();
   };
-  const sessionCheck = () => {
-    if (!session) {
-      return Alert("댓글 기능은 로그인 후 이용 가능합니다. ");
-    }
-  };
+  console.log("isUpdate", isUpdate);
+
   return (
-    <div>
+    <div className="min-height-calc">
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
-          <img
-            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${postDetailData.users?.profileImgUrl}`}
-            alt={`${postDetailData.users?.profileImgUrl}`}
-            className="w-[50px] h-[50px] rounded-full"
-          />
+          <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
+            <img
+              src={
+                postDetailData.users?.profileImgUrl
+                  ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${postDetailData.users?.profileImgUrl}`
+                  : defaultImg
+              }
+              alt={`${postDetailData.users?.profileImgUrl}`}
+              className="object-cover w-full h-full"
+            />
+          </div>
           <div className="font-bold text-[18px]">{postDetailData.users?.nickname}</div>
         </div>
         <h3>{postDetailData.title}</h3>
@@ -144,7 +180,7 @@ const Details = () => {
             className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
             onClick={handleGoBack}
           />
-          <div className="flex">
+          <div className="flex align-middle">
             {likeState ? (
               <AiFillLike
                 className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
@@ -156,34 +192,68 @@ const Details = () => {
                 onClick={likeClickHandler}
               />
             )}
-            <p className="text-[25px] ml-3">{postLikes}</p>
+            <p className="text-[25px] ml-3 pt-2.5">{postLikes}</p>
           </div>
         </div>
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {commentsData.length === 0 && (
-          <div className="text-center text-white">댓글이 없습니다.</div>
+          <div className="text-center text-gray-500">댓글이 없습니다.</div>
         )}
         {commentsData.map(comment => (
-          <li key={comment.id} className="flex items-center gap-3 text-white">
-            <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
-              <img
-                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`}
-                alt={`${comment.users?.nickname}`}
-              />
-            </div>
-            <div className="flex w-full gap-10 pb-1 border-b border-white">
-              <div>{comment.users?.nickname}</div>
-              <p>{comment.contents}</p>
-            </div>
-            {session?.user.id === comment.users?.id && (
-              <div className="absolute right-0 flex gap-2 -translate-x-full">
-                <UpdateIcon className="w-5 cursor-pointer stroke-white fill-white" />
-                <DeleteIcon
-                  className="w-5 cursor-pointer stroke-white fill-white"
-                  onClick={() => handleCommentDelete(comment.id)}
+          <li key={comment.id} className="flex flex-col text-white">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center overflow-hidden bg-black rounded-full w-7 h-7">
+                <img
+                  src={
+                    comment.users?.profileImgUrl
+                      ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`
+                      : defaultImg
+                  }
+                  alt={`${comment.users?.nickname}`}
+                  className="object-cover w-full h-full"
                 />
               </div>
+              <div className="flex w-full gap-10 pb-1 border-b border-white">
+                <div>{comment.users?.nickname}</div>
+                <p>{comment.contents}</p>
+              </div>
+              {session?.user.id === comment.users?.id && (
+                <div className="flex gap-2">
+                  <UpdateIcon
+                    onClick={() => handleCommentUpdate(comment.id)}
+                    className="w-5 h-5 cursor-pointer stroke-white fill-white"
+                  />
+                  <DeleteIcon
+                    className="w-5 h-5 cursor-pointer stroke-white fill-white"
+                    onClick={() => handleCommentDelete(comment.id)}
+                  />
+                </div>
+              )}
+            </div>
+            {isUpdate === comment.id && (
+              <form
+                onSubmit={e => handleSubmitUpdateComment(e, comment.id)}
+                className="flex max-w-3xl gap-4 my-5"
+              >
+                <input
+                  value={contents}
+                  onChange={handleContents}
+                  className="w-full px-4 m-1 text-white bg-black rounded-3xl"
+                />
+                <Button
+                  type="submit"
+                  className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
+                >
+                  수정
+                </Button>
+                <Button
+                  onClick={() => setIsUpdate("")}
+                  className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
+                >
+                  취소
+                </Button>
+              </form>
             )}
           </li>
         ))}
@@ -193,7 +263,6 @@ const Details = () => {
           value={comment}
           onChange={handleComment}
           className="w-full px-4 m-1 text-white bg-black rounded-3xl"
-          onClick={sessionCheck}
         />
         <Button
           type="submit"
