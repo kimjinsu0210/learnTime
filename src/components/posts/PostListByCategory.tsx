@@ -39,16 +39,18 @@ export default function PostListByCategory() {
               return (
                 <Link to={`/details/${post.id}`} key={post.id}>
                   <li className="grid grid-cols-12 p-2 transition duration-300 border-b border-gray-300 last:border-0 group hover:bg-[#c5c5c5] hover:rounded-lg cursor-pointer">
-                    <div className="flex col-span-3">
-                      <img
-                        className="inline-block w-6 h-6 mr-2 rounded-full"
-                        src={
-                          post.users?.profileImgUrl
-                            ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${post.users?.profileImgUrl}`
-                            : defaultImg
-                        }
-                        alt={`${post.users?.nickname} 프로필 이미지`}
-                      />
+                    <div className="flex col-span-3 gap-3">
+                      <div className="flex items-center justify-center w-7 h-7 overflow-hidden bg-black rounded-full">
+                        <img
+                          className="w-full h-full object-cover"
+                          src={
+                            post.users?.profileImgUrl
+                              ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${post.users?.profileImgUrl}`
+                              : defaultImg
+                          }
+                          alt={`${post.users?.nickname} 프로필 이미지`}
+                        />
+                      </div>
                       <p className="text-ellipsis line-clamp-1">{post.users?.nickname}</p>
                     </div>
                     <p className="col-span-7 text-ellipsis line-clamp-1">{post.title}</p>

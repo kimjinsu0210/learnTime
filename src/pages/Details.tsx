@@ -154,6 +154,7 @@ const Details = () => {
     window.history.back();
   };
   console.log("isUpdate", isUpdate);
+
   return (
     <div className="min-height-calc">
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
@@ -202,10 +203,15 @@ const Details = () => {
         {commentsData.map(comment => (
           <li key={comment.id} className="flex flex-col text-white">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
+              <div className="flex items-center justify-center w-7 h-7 overflow-hidden bg-black rounded-full">
                 <img
-                  src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`}
+                  src={
+                    comment.users?.profileImgUrl
+                      ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`
+                      : defaultImg
+                  }
                   alt={`${comment.users?.nickname}`}
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="flex w-full gap-10 pb-1 border-b border-white">
