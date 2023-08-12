@@ -8,16 +8,15 @@ import { SignIn, SignOut, SignUp } from "components/auth";
 import defaultImg from "assets/defaultImg.png";
 import Button from "components/button/Button";
 
-const MyPage = () => {
-  // 게시글 제목, 어디서 작성했는지 해당 카테고리 값 불러오기
-  // 내가 쓴 게시글만 불러오기
-  // 클릭해서 디테일 자세히 보기
-  // 삭제 버튼 추가
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 
+const MyPage = () => {
   const session = useSessionStore(state => state.session);
   const setSession = useSessionStore(state => state.setSession);
   const storageUrl = process.env.REACT_APP_SUPABASE_STORAGE_URL;
   const addedSession = session?.user.user_metadata;
+
+  const { Alert, Confirm } = useDialog();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -58,7 +57,7 @@ const MyPage = () => {
     fetchData();
   }, []);
 
-  console.log("loadData ->", myPostList);
+  console.log("loadData ->", myPostList);  
 
   const handleDeleteButtonClick = async (postId: string) => {
     try {
@@ -67,7 +66,7 @@ const MyPage = () => {
       alert("삭제 완료");
       loadMyPosts();
     } catch (error) {
-      alert("게시글 삭제 중 오류 발생");
+      Confirm("게시글 삭제 중 오류 발생");
     }
   };
 
@@ -85,8 +84,10 @@ const MyPage = () => {
             alt="profileImg"
             className="w-[100px] h-[100px] rounded-full inline-block mb-4"
           />
-          <p className="mx-1 text-md text-white ">{addedSession?.nickname}</p>
-          <SignOut />
+          <p className="mb-4 text-md text-xl text-white ">{addedSession?.nickname}</p>
+          <Button>
+            <SignOut />
+          </Button>
         </div>
       ) : (
         <div className="text-white text-center flex justify-center my-8">
@@ -97,7 +98,7 @@ const MyPage = () => {
 
       {myPostList?.map((item, index) => (
         <div key={item.id}>
-          <div className="container mb-6 flex flex-col py-4 space-y-4 justify-center bg-white rounded-xl ">
+          <div className="container max-w-3xl mb-6 flex flex-col py-4 space-y-4 justify-center bg-white rounded-xl ">
             <div className="flex">
               <div className="flex-none text-base p-2 mx-2">{index + 1}</div>
               <div className="flex-none text-base p-2 max-w-sm mx-auto ml-2">
@@ -110,7 +111,7 @@ const MyPage = () => {
               </div>
               <div className="flex-none text-base p-2 max-w-sm mr-4">Likes {item.likes}</div>
               <button
-                className="bg-primary px-6 text-white rounded-xl mr-2"
+                className="bg-mainDark1 px-6 text-white rounded-xl mr-2"
                 onClick={() => handleDeleteButtonClick(item.id)}
               >
                 삭제

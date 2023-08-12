@@ -5,11 +5,15 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import { getCategory } from "api/supabaseDatabaseFn";
 import { Link } from "react-router-dom";
+import useSessionStore from "components/zustand/store";
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 
 export default function PostListByCategory() {
   const { mount } = useModal();
   const param = useParams();
   const paramCategoryName = param.category;
+  const session = useSessionStore(state => state.session);
+  const { Alert } = useDialog();
 
   const useFetchPosts = () => {
     return useQuery({
@@ -22,11 +26,17 @@ export default function PostListByCategory() {
 
   if (isLoading || !PostData) return <div>Loading...</div>;
   if (error) return <div>error</div>;
-
+  const createPostHandler = () => {
+    if (!session) {
+      return Alert("강의 노트 공유하기는 로그인 후 이용 가능합니다.");
+    }else{
+      mount("post", <PostForm categoryId={PostData?.uid} />)
+    }
+  };
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mt-10 mb-5 text-right">
-        <Button onClick={() => mount("post", <PostForm categoryId={PostData?.uid} />)}>
+        <Button onClick={createPostHandler}>
           강의 노트 공유하기
         </Button>
       </div>

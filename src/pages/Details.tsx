@@ -120,6 +120,11 @@ const Details = () => {
   const handleGoBack = () => {
     window.history.back();
   };
+  const sessionCheck = () => {
+    if (!session) {
+      return Alert("댓글 기능은 로그인 후 이용 가능합니다. ");
+    }
+  };
   return (
     <div>
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
@@ -156,9 +161,7 @@ const Details = () => {
         </div>
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
-        {commentsData.length === 0 && (
-          <div className="text-gray-500 text-center">댓글이 없습니다.</div>
-        )}
+        {commentsData.length === 0 && <div className="text-center text-white">댓글이 없습니다.</div>}
         {commentsData.map(comment => (
           <li key={comment.id} className="flex items-center gap-3 text-white">
             <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
@@ -188,6 +191,7 @@ const Details = () => {
           value={comment}
           onChange={handleComment}
           className="w-full px-4 m-1 text-white bg-black rounded-3xl"
+          onClick={sessionCheck}
         />
         <Button
           type="submit"
