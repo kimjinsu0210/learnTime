@@ -12,7 +12,6 @@ import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 
 const MyPage = () => {
   const session = useSessionStore(state => state.session);
-  // const setSession = useSessionStore(state => state.setSession);
   const storageUrl = process.env.REACT_APP_SUPABASE_STORAGE_URL;
   const addedSession = session?.user.user_metadata;
 
@@ -46,17 +45,6 @@ const MyPage = () => {
     fetchData();
   }, [session]);
 
-  // useEffect(() => {
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     setSession(session);
-  //   });
-  //   supabase.auth.onAuthStateChange((_event, session) => {
-  //     setSession(session);
-  //   });
-  // }, [setSession]);
-
-  console.log("session data ->", session);
-
   const handleDeleteButtonClick = async (postId: string) => {
     try {
       await supabase.from("posts").delete().eq("id", postId);
@@ -67,8 +55,6 @@ const MyPage = () => {
       Alert("게시글 삭제 중 오류 발생");
     }
   };
-
-  console.log("loadData ->", myPostList);
 
   return (
     <div className="min-height-calc ">
