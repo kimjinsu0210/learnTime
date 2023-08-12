@@ -20,6 +20,7 @@ const Details = () => {
   const { Alert, Confirm } = useDialog();
   const [likeState, setLikeState] = useState<Boolean>(false);
   const [postLikes, setPostLikes] = useState<number | null>(null);
+  const [isUpdate, setIsUpdate] = useState<string>("");
 
   const { data: postDetailData, isLoading: postIsLoading } = useQuery({
     queryKey: ["detail", params.id],
@@ -65,6 +66,12 @@ const Details = () => {
       return;
     }
     deleteMutate(commentId);
+  };
+
+  type UpdateComment = (commentId: string) => void;
+  const handleCommentUpdate: UpdateComment = commentId => {
+    console.log(commentId);
+    setIsUpdate(commentId);
   };
 
   useEffect(() => {
@@ -120,6 +127,7 @@ const Details = () => {
   const handleGoBack = () => {
     window.history.back();
   };
+  console.log("isUpdate", isUpdate);
   return (
     <div>
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
@@ -158,25 +166,47 @@ const Details = () => {
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {commentsData.length === 0 && <div>댓글이 없습니다.</div>}
         {commentsData.map(comment => (
-          <li key={comment.id} className="flex items-center gap-3 text-white">
-            <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
-              <img
-                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`}
-                alt={`${comment.users?.nickname}`}
-              />
-            </div>
-            <div className="flex w-full gap-10 pb-1 border-b border-white">
-              <div>{comment.users?.nickname}</div>
-              <p>{comment.contents}</p>
-            </div>
-            {session?.user.id === comment.users?.id && (
-              <div className="absolute right-0 flex gap-2 -translate-x-full">
-                <UpdateIcon className="w-5 cursor-pointer stroke-white fill-white" />
-                <DeleteIcon
-                  className="w-5 cursor-pointer stroke-white fill-white"
-                  onClick={() => handleCommentDelete(comment.id)}
+          <li key={comment.id} className="flex flex-col text-white">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
+                <img
+                  src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`}
+                  alt={`${comment.users?.nickname}`}
                 />
               </div>
+              <div className="flex w-full gap-10 pb-1 border-b border-white">
+                <div>{comment.users?.nickname}</div>
+                <p>{comment.contents}</p>
+              </div>
+              {session?.user.id === comment.users?.id && (
+                <div className="absolute right-0 flex gap-2 -translate-x-full">
+                  <UpdateIcon
+                    onClick={() => handleCommentUpdate(comment.id)}
+                    className="w-5 cursor-pointer stroke-white fill-white"
+                  />
+                  <DeleteIcon
+                    className="w-5 cursor-pointer stroke-white fill-white"
+                    onClick={() => handleCommentDelete(comment.id)}
+                  />
+                </div>
+              )}
+            </div>
+            {isUpdate === comment.id && (
+              <form className="flex max-w-3xl gap-4 my-5">
+                <input className="w-full px-4 m-1 text-white bg-black rounded-3xl" />
+                <Button
+                  type="submit"
+                  className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
+                >
+                  수정
+                </Button>
+                <Button
+                  onClick={() => setIsUpdate("")}
+                  className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
+                >
+                  취소
+                </Button>
+              </form>
             )}
           </li>
         ))}

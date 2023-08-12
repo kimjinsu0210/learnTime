@@ -1,4 +1,3 @@
-import { useLockBodyScroll } from "hooks/useLockBodyScroll";
 import { MouseEvent, ReactNode } from "react";
 import { useOverlayContext } from "../Overlay.context";
 
@@ -18,8 +17,6 @@ const Modal = ({ children, name }: Props) => {
 
     unmount(name);
   };
-
-  useLockBodyScroll(true);
 
   return (
     <div
