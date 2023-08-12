@@ -47,6 +47,8 @@ const MyPage = () => {
 
   const handleDeleteButtonClick = async (postId: string) => {
     try {
+      await supabase.from("likes").delete().eq("postId", postId);
+      await supabase.from("comments").delete().eq("postId", postId);
       await supabase.from("posts").delete().eq("id", postId);
 
       Alert("삭제 완료");
@@ -71,9 +73,7 @@ const MyPage = () => {
             className="w-[100px] h-[100px] rounded-full inline-block mb-4"
           />
           <p className="mb-4 text-xl text-white text-md ">{addedSession?.nickname}</p>
-          <Button>
-            <SignOut />
-          </Button>
+          <p className="mb-4 text-xl text-white text-md ">반가워요! 같이 공부해봅시다 👩‍💻</p>
         </div>
       ) : (
         <div className="flex justify-center my-8 text-center text-white">
