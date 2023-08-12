@@ -42,7 +42,9 @@ const Header: React.FC = () => {
                 className="w-[30px] h-[30px] rounded-full"
               />
             </Link>
-            <p className="mx-1 text-md">{addedSession?.nickname}님&nbsp;</p>
+            <Link to="/mypage" className="mx-1 text-md">
+              {addedSession?.nickname}님&nbsp;
+            </Link>
             <SignOut />
           </>
         ) : (
