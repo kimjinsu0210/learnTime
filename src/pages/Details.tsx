@@ -129,7 +129,9 @@ const Details = () => {
         )}
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
-        {commentsData.length === 0 && <div>댓글이 없습니다.</div>}
+        {commentsData.length === 0 && (
+          <div className="text-gray-500 text-center">댓글이 없습니다.</div>
+        )}
         {commentsData.map(comment => (
           <li key={comment.id} className="flex items-center gap-3 text-white">
             <div className="flex items-center justify-center w-8 h-8 bg-black overflow-hidden rounded-full">

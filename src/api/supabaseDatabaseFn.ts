@@ -19,31 +19,13 @@ export const getCategory = async (categoryName?: string) => {
     )
     .eq("name", categoryName)
     .single();
+
+  if (data && data.posts) {
+    data.posts.sort((a: any, b: any) => b.likes - a.likes);
+  }
   return data;
 };
 
 export const addPost = async (newPost: Tables<"posts">) => {
   await supabase.from("posts").insert(newPost);
 };
-
-// {
-//   title,
-//   link,
-//   contents,
-//   categoryId,
-//   userId: session?.user.id,
-//   userEmail: session?.user.email,
-// likes: 0
-// }
-
-// export type DbResult<T> = T extends PromiseLike<infer U> ? U : never;
-// export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }> ? Exclude<U, null> : never;
-// export type DbResultErr = PostgrestError;
-
-// const postType = supabase
-//   .from("posts")
-//   .select(`title, link, contents, categoryId, userId, userEmail, likes`);
-
-// export const addPost = async (newPost: DbResult<typeof postType>) => {
-//   await supabase.from("posts").insert(newPost);
-// };
