@@ -12,7 +12,6 @@ import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 
 const MyPage = () => {
   const session = useSessionStore(state => state.session);
-  const setSession = useSessionStore(state => state.setSession);
   const storageUrl = process.env.REACT_APP_SUPABASE_STORAGE_URL;
   const addedSession = session?.user.user_metadata;
 
@@ -46,17 +45,6 @@ const MyPage = () => {
     fetchData();
   }, [session]);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, [setSession]);
-
-  console.log("session data ->", session);
-
   const handleDeleteButtonClick = async (postId: string) => {
     try {
       await supabase.from("posts").delete().eq("id", postId);
@@ -68,13 +56,11 @@ const MyPage = () => {
     }
   };
 
-  console.log("loadData ->", myPostList);
-
   return (
     <div className="min-height-calc ">
-      <h1 className="text-2xl text-white text-center p-8 font-bold">My Page</h1>
+      <h1 className="p-8 text-2xl font-bold text-center text-white">My Page</h1>
       {session ? (
-        <div className="container text-white text-center justify-center my-8 max-w-sm mx-auto">
+        <div className="container justify-center max-w-sm mx-auto my-8 text-center text-white">
           <img
             src={
               addedSession?.profileImgUrl
@@ -84,13 +70,13 @@ const MyPage = () => {
             alt="profileImg"
             className="w-[100px] h-[100px] rounded-full inline-block mb-4"
           />
-          <p className="mb-4 text-md text-xl text-white ">{addedSession?.nickname}</p>
+          <p className="mb-4 text-xl text-white text-md ">{addedSession?.nickname}</p>
           <Button>
             <SignOut />
           </Button>
         </div>
       ) : (
-        <div className="text-white text-center flex justify-center my-8">
+        <div className="flex justify-center my-8 text-center text-white">
           <SignIn />
           <SignUp />
         </div>
@@ -98,18 +84,18 @@ const MyPage = () => {
 
       {myPostList?.map((item, index) => (
         <div key={item.id}>
-          <div className="container max-w-3xl mb-5 flex flex-col py-4 space-y-4 justify-center bg-white rounded-xl ">
+          <div className="container flex flex-col justify-center max-w-3xl py-4 mb-5 space-y-4 bg-white rounded-xl ">
             <div className="flex">
-              <div className="flex-none text-base p-2 mx-2">{index + 1}</div>
-              <div className="flex-none text-base p-2 max-w-sm mx-auto ml-2">
+              <div className="flex-none p-2 mx-2 text-base">{index + 1}</div>
+              <div className="flex-none max-w-sm p-2 mx-auto ml-2 text-base">
                 <Link to={`/details/${item.id}`} className="cursor-pointer">
                   {item.title}
                 </Link>
               </div>
-              <div className="flex-none text-base p-2 max-w-sm mx-4 px-4 font-bold">
+              <div className="flex-none max-w-sm p-2 px-4 mx-4 text-base font-bold">
                 {item.category ? item.category.name : "Unknown Category"}
               </div>
-              <div className="flex-none text-base p-2 max-w-sm mr-4">Likes {item.likes}</div>
+              <div className="flex-none max-w-sm p-2 mr-4 text-base">Likes {item.likes}</div>
               <div className="mr-3">
                 <Button onClick={() => handleDeleteButtonClick(item.id)}>삭제</Button>
               </div>

@@ -6,12 +6,15 @@ import { useParams } from "react-router";
 import { getCategory } from "api/supabaseDatabaseFn";
 import { Link } from "react-router-dom";
 import defaultImg from "assets/defaultImg.png";
+import useSessionStore from "components/zustand/store";
+import { useDialog } from "components/overlay/dialog/Dialog.hooks";
 
 export default function PostListByCategory() {
+  const session = useSessionStore(state => state.session);
   const { mount } = useModal();
   const param = useParams();
   const paramCategoryName = param.category;
-
+  const { Alert } = useDialog();
   const useFetchPosts = () => {
     return useQuery({
       queryKey: ["getCategory", paramCategoryName],
@@ -24,12 +27,17 @@ export default function PostListByCategory() {
   if (isLoading || !PostData) return <div>Loading...</div>;
   if (error) return <div>error</div>;
 
+  const createPost = () => {
+    if (session) {
+      mount("post", <PostForm categoryId={PostData?.uid} />);
+    }else{
+      Alert("강의 노트 공유하기는 로그인 후 이용 가능합니다.")
+    }
+  };
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mt-10 mb-5 text-right">
-        <Button onClick={() => mount("post", <PostForm categoryId={PostData?.uid} />)}>
-          강의 노트 공유하기
-        </Button>
+        <Button onClick={createPost}>강의 노트 공유하기</Button>
       </div>
       <div className="p-6 rounded-lg bg-mainDark1">
         <h3 className="mb-4 text-xl text-white">같이 공부!</h3>
@@ -40,9 +48,9 @@ export default function PostListByCategory() {
                 <Link to={`/details/${post.id}`} key={post.id}>
                   <li className="grid grid-cols-12 p-2 transition duration-300 border-b border-gray-300 last:border-0 group hover:bg-[#c5c5c5] hover:rounded-lg cursor-pointer">
                     <div className="flex col-span-3 gap-3">
-                      <div className="flex items-center justify-center w-7 h-7 overflow-hidden bg-black rounded-full">
+                      <div className="flex items-center justify-center overflow-hidden bg-black rounded-full w-7 h-7">
                         <img
-                          className="w-full h-full object-cover"
+                          className="object-cover w-full h-full"
                           src={
                             post.users?.profileImgUrl
                               ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${post.users?.profileImgUrl}`

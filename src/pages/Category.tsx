@@ -21,8 +21,6 @@ const Category = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>error</div>;
 
-  const test = categoryData?.uid;
-
   return (
     <main className="py-10 min-height-calc">
       <CategoryDetail categoryData={categoryData} />

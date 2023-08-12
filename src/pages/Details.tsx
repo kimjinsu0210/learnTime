@@ -96,7 +96,6 @@ const Details = () => {
 
   type UpdateComment = (commentId: string) => void;
   const handleCommentUpdate: UpdateComment = commentId => {
-    console.log(commentId);
     setIsUpdate(commentId);
   };
 
@@ -113,12 +112,11 @@ const Details = () => {
         } else {
           setLikeState(true);
         }
+      }
+      const { data } = await supabase.from("posts").select("likes").eq("id", params.id).single();
 
-        const { data } = await supabase.from("posts").select("likes").eq("id", params.id).single();
-
-        if (data) {
-          setPostLikes(data.likes);
-        }
+      if (data) {
+        setPostLikes(data.likes);
       }
     };
     fetchData();
@@ -153,7 +151,6 @@ const Details = () => {
   const handleGoBack = () => {
     window.history.back();
   };
-  console.log("isUpdate", isUpdate);
 
   return (
     <div className="min-height-calc">
@@ -167,43 +164,48 @@ const Details = () => {
                   : defaultImg
               }
               alt={`${postDetailData.users?.profileImgUrl}`}
-              className="w-full h-full object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
-          <div className="font-bold text-[18px]">{postDetailData.users?.nickname}</div>
+          <div className="text-[18px]">{postDetailData.users?.nickname}</div>
         </div>
-        <h3>{postDetailData.title}</h3>
-        <a href={`${postDetailData.link}`}>{postDetailData.link}</a>
+        <h3 className="font-bold text-[16px]">{postDetailData.title}</h3>
+        <a
+          className="text-blue-500 underline decoration-1 w-[fit-content]"
+          href={`${postDetailData.link}`}
+        >
+          {postDetailData.link}
+        </a>
         <p>{postDetailData.contents}</p>
         <div className="flex justify-between">
           <TiArrowBack
-            className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+            className="text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8] hover:scale-[1.1]"
             onClick={handleGoBack}
           />
           <div className="flex align-middle">
             {likeState ? (
               <AiFillLike
-                className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+                className="text-primary text-[40px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8] hover:scale-[1.1]"
                 onClick={likeClickHandler}
               />
             ) : (
               <AiFillLike
-                className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
+                className="text-[#c0c0c0] text-[40px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8] hover:scale-[1.1]"
                 onClick={likeClickHandler}
               />
             )}
-            <p className="text-[25px] ml-3 pt-2.5">{postLikes}</p>
+            <p className="text-[25px] ml-3 mt-1">{postLikes}</p>
           </div>
         </div>
       </div>
       <ul className="flex flex-col max-w-3xl gap-4 mx-auto">
         {commentsData.length === 0 && (
-          <div className="text-gray-500 text-center">댓글이 없습니다.</div>
+          <div className="text-center text-gray-500">댓글이 없습니다.</div>
         )}
         {commentsData.map(comment => (
           <li key={comment.id} className="flex flex-col text-white">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-7 h-7 overflow-hidden bg-black rounded-full">
+              <div className="flex items-center justify-center overflow-hidden bg-black rounded-full w-7 h-7">
                 <img
                   src={
                     comment.users?.profileImgUrl
@@ -211,7 +213,7 @@ const Details = () => {
                       : defaultImg
                   }
                   alt={`${comment.users?.nickname}`}
-                  className="w-full h-full object-cover"
+                  className="object-cover w-full h-full"
                 />
               </div>
               <div className="flex w-full gap-10 pb-1 border-b border-white">
@@ -258,19 +260,25 @@ const Details = () => {
           </li>
         ))}
       </ul>
-      <form onSubmit={handleSubmitComment} className="flex max-w-3xl gap-4 mx-auto my-10">
-        <input
-          value={comment}
-          onChange={handleComment}
-          className="w-full px-4 m-1 text-white bg-black rounded-3xl"
-        />
-        <Button
-          type="submit"
-          className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
-        >
-          입력
-        </Button>
-      </form>
+      {session ? (
+        <form onSubmit={handleSubmitComment} className="flex max-w-3xl gap-4 mx-auto my-10">
+          <input
+            value={comment}
+            onChange={handleComment}
+            className="w-full px-4 m-1 text-white bg-black rounded-3xl"
+          />
+          <Button
+            type="submit"
+            className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
+          >
+            입력
+          </Button>
+        </form>
+      ) : (
+        <div className="max-w-3xl mx-auto my-10 text-center text-gray-500">
+          댓글 기능은 로그인 후 가능합니다.
+        </div>
+      )}
     </div>
   );
 };
