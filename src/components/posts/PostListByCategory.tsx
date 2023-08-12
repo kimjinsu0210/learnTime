@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import { getCategory } from "api/supabaseDatabaseFn";
 import { Link } from "react-router-dom";
+import defaultImg from "assets/defaultImg.png";
 
 export default function PostListByCategory() {
   const { mount } = useModal();
@@ -36,12 +37,16 @@ export default function PostListByCategory() {
           <ul className="bg-white rounded-lg">
             {PostData.posts.map(post => {
               return (
-                <Link to={`/details/${post.id}`}>
+                <Link to={`/details/${post.id}`} key={post.id}>
                   <li className="grid grid-cols-12 p-2 transition duration-300 border-b border-gray-300 last:border-0 group hover:bg-[#c5c5c5] hover:rounded-lg cursor-pointer">
                     <div className="flex col-span-3">
                       <img
-                        className="inline-block w-6 h-6 mr-2 rounded-full ring-1"
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${post.users?.profileImgUrl}`}
+                        className="inline-block w-6 h-6 mr-2 rounded-full"
+                        src={
+                          post.users?.profileImgUrl
+                            ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${post.users?.profileImgUrl}`
+                            : defaultImg
+                        }
                         alt={`${post.users?.nickname} 프로필 이미지`}
                       />
                       <p className="text-ellipsis line-clamp-1">{post.users?.nickname}</p>

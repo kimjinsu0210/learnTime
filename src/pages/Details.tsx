@@ -10,6 +10,7 @@ import { AiFillLike } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
+import defaultImg from "assets/defaultImg.png";
 
 const Details = () => {
   const session = useSessionStore(state => state.session);
@@ -121,14 +122,20 @@ const Details = () => {
     window.history.back();
   };
   return (
-    <div>
+    <div className="min-height-calc">
       <div className="flex flex-col max-w-3xl gap-5 p-6 mx-auto my-10 bg-gray-200 rounded-lg">
         <div className="flex items-center gap-5">
-          <img
-            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${postDetailData.users?.profileImgUrl}`}
-            alt={`${postDetailData.users?.profileImgUrl}`}
-            className="w-[50px] h-[50px] rounded-full"
-          />
+          <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
+            <img
+              src={
+                postDetailData.users?.profileImgUrl
+                  ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${postDetailData.users?.profileImgUrl}`
+                  : defaultImg
+              }
+              alt={`${postDetailData.users?.profileImgUrl}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="font-bold text-[18px]">{postDetailData.users?.nickname}</div>
         </div>
         <h3>{postDetailData.title}</h3>
@@ -139,7 +146,7 @@ const Details = () => {
             className="text-[#c0c0c0] text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
             onClick={handleGoBack}
           />
-          <div className="flex">
+          <div className="flex align-middle">
             {likeState ? (
               <AiFillLike
                 className="text-primary text-[50px] cursor-pointer transition-transform transition-duration-300 active:scale-[.8]"
@@ -151,7 +158,7 @@ const Details = () => {
                 onClick={likeClickHandler}
               />
             )}
-            <p className="text-[25px] ml-3">{postLikes}</p>
+            <p className="text-[25px] ml-3 pt-2.5">{postLikes}</p>
           </div>
         </div>
       </div>
@@ -160,11 +167,16 @@ const Details = () => {
           <div className="text-gray-500 text-center">댓글이 없습니다.</div>
         )}
         {commentsData.map(comment => (
-          <li key={comment.id} className="flex items-center gap-3 text-white">
-            <div className="flex items-center justify-center w-8 h-8 overflow-hidden bg-black rounded-full">
+          <li key={comment.id} className="flex items-center gap-3 text-white relative">
+            <div className="flex items-center justify-center w-6 h-6 overflow-hidden bg-black rounded-full">
               <img
-                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`}
+                src={
+                  comment.users?.profileImgUrl
+                    ? `${process.env.REACT_APP_SUPABASE_STORAGE_URL}/${comment.users?.profileImgUrl}`
+                    : defaultImg
+                }
                 alt={`${comment.users?.nickname}`}
+                className="w-full h-full object-cover"
               />
             </div>
             <div className="flex w-full gap-10 pb-1 border-b border-white">
@@ -172,7 +184,7 @@ const Details = () => {
               <p>{comment.contents}</p>
             </div>
             {session?.user.id === comment.users?.id && (
-              <div className="absolute right-0 flex gap-2 -translate-x-full">
+              <div className="absolute right-0 flex gap-2">
                 <UpdateIcon className="w-5 cursor-pointer stroke-white fill-white" />
                 <DeleteIcon
                   className="w-5 cursor-pointer stroke-white fill-white"

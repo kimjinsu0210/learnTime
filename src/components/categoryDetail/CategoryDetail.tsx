@@ -6,10 +6,10 @@ interface Props {
 
 export default function CategoryDetail({ categoryData }: Props) {
   return (
-    <div className="max-w-3xl p-6 mx-auto bg-gray-200 rounded-lg">
+    <div className="max-w-3xl p-6 mx-auto bg-mainDark1 rounded-lg">
       {categoryData && (
         <div key={categoryData.uid}>
-          <h2 className="mb-4 text-2xl">{categoryData.name}</h2>
+          <h2 className="mb-4 text-white text-2xl">{categoryData.name}</h2>
           <a href={`${categoryData.link}`} target="_blank" rel="noreferrer">
             <div className="flex bg-white rounded h-36">
               <div className="flex-auto px-4 py-5">
