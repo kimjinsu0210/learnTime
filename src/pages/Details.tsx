@@ -11,6 +11,11 @@ import { TiArrowBack } from "react-icons/ti";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router";
 
+interface Props {
+  commentId: string;
+  contents: string;
+}
+
 const Details = () => {
   const session = useSessionStore(state => state.session);
   const [comment, handleComment, setComment] = useInput();
@@ -21,6 +26,7 @@ const Details = () => {
   const [likeState, setLikeState] = useState<Boolean>(false);
   const [postLikes, setPostLikes] = useState<number | null>(null);
   const [isUpdate, setIsUpdate] = useState<string>("");
+  const [contents, handleContents, setContents] = useInput();
 
   const { data: postDetailData, isLoading: postIsLoading } = useQuery({
     queryKey: ["detail", params.id],
@@ -52,6 +58,25 @@ const Details = () => {
       queryClient.invalidateQueries(["comments"]);
     }
   });
+
+  const { mutate: updateMutate } = useMutation({
+    mutationFn: async ({ commentId, contents }: Props) => {
+      await supabase.from("comments").update({ contents: contents }).eq("id", commentId);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["comments"]);
+      setIsUpdate("");
+      setContents("");
+      await Alert("댓글이 수정되었습니다.");
+    }
+  });
+
+  type SubmitCommentUpdate = (e: FormEvent<HTMLFormElement>, commentId: string) => void;
+  const handleSubmitUpdateComment: SubmitCommentUpdate = (e, commentId) => {
+    e.preventDefault();
+    updateMutate({ commentId, contents });
+    setComment("");
+  };
 
   type SubmitComment = (e: FormEvent<HTMLFormElement>) => void;
   const handleSubmitComment: SubmitComment = e => {
@@ -181,21 +206,28 @@ const Details = () => {
                 <p>{comment.contents}</p>
               </div>
               {session?.user.id === comment.users?.id && (
-                <div className="absolute right-0 flex gap-2 -translate-x-full">
+                <div className="flex gap-2">
                   <UpdateIcon
                     onClick={() => handleCommentUpdate(comment.id)}
-                    className="w-5 cursor-pointer stroke-white fill-white"
+                    className="w-5 h-5 cursor-pointer stroke-white fill-white"
                   />
                   <DeleteIcon
-                    className="w-5 cursor-pointer stroke-white fill-white"
+                    className="w-5 h-5 cursor-pointer stroke-white fill-white"
                     onClick={() => handleCommentDelete(comment.id)}
                   />
                 </div>
               )}
             </div>
             {isUpdate === comment.id && (
-              <form className="flex max-w-3xl gap-4 my-5">
-                <input className="w-full px-4 m-1 text-white bg-black rounded-3xl" />
+              <form
+                onSubmit={e => handleSubmitUpdateComment(e, comment.id)}
+                className="flex max-w-3xl gap-4 my-5"
+              >
+                <input
+                  value={contents}
+                  onChange={handleContents}
+                  className="w-full px-4 m-1 text-white bg-black rounded-3xl"
+                />
                 <Button
                   type="submit"
                   className="self-center w-20 px-4 py-2 m-1 text-sm text-white transition duration-300 shadow-md min-w-fit w rounded-3xl bg-primary hover:bg-opacity-70"
