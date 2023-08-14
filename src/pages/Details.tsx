@@ -96,6 +96,7 @@ const Details = () => {
 
   type UpdateComment = (commentId: string) => void;
   const handleCommentUpdate: UpdateComment = commentId => {
+    console.log("commentId", commentId);
     setIsUpdate(commentId);
   };
 
