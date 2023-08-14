@@ -48,18 +48,18 @@ const SignUpForm = ({ unmount }: { unmount: (name: string) => void }) => {
       }
     });
     let uid = authData.user?.id;
-
-    //database 생성
-    const { error: dbError } = await supabase
-      .from("users")
-      .insert({ id: uid, email, nickname, profileImgUrl: profileUrl });
-
     if (authError) {
       if (authError?.message === "Unable to validate email address: invalid format")
         return Alert("이메일 형태가 올바르지 않습니다.");
       else if (authError?.message === "User already registered")
         return Alert("이미 일치하는 회원이 존재합니다.");
     }
+    
+    //database 생성
+    const { error: dbError } = await supabase
+    .from("users")
+    .insert({ id: uid, email, nickname, profileImgUrl: profileUrl });
+    
     if (dbError) return Alert("db에러발생");
     unmount("signUp");
     return Alert("회원가입이 정상적으로 처리 되었습니다!");

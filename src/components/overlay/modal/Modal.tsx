@@ -21,7 +21,7 @@ const Modal = ({ children, name }: Props) => {
   return (
     <div
       className="fixed top-0 left-0 z-40 flex items-center justify-center w-full h-full bg-black bg-opacity-30"
-      onClick={handleClose}
+      onMouseDown={handleClose}
     >
       <div className="max-w-lg p-5 text-white rounded-lg bg-mainDark1">{children}</div>
     </div>
